@@ -1,2 +1,2 @@
 # steamvision
-Steam library viewer
+Browse your Steam library in a more informative way.
