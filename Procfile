@@ -1,1 +1,1 @@
-web: (... command to run the app <_< )
+web: gunicorn -w 4 -b 0.0.0.0:$PORT -k gevent application:app
