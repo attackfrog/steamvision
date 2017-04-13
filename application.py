@@ -43,15 +43,15 @@ def userinfo():
 
     # Try accessing the user's games list
     try:
-        games_info = urllib.request.urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json"
-                                            .format(os.environ.get("API_KEY"), user_id["response"]["steamid"]))
+        games_info = json.load(urllib.request.urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json"
+                                            .format(os.environ.get("API_KEY"), user_id)))
     # If it didn't work, give an error.
     except:
         message = "That doesn't seem to be a valid Steam ID."
         return render_template("error.html", message=message)
 
-    if games_info["game_count"] == 0:
+    if games_info["response"]["game_count"] == 0:
         message = "That account doesn't have any games!"
         return render_template("error.html", message=message)
 
-    return games_info.read()
+    return games_info
