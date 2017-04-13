@@ -28,7 +28,7 @@ def userinfo():
     user_id = json.load(user_id)
 
     games_info = urllib.request.urlopen(
-        "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid=76561197960434622&format=json"
+        "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json"
         .format(os.environ.get("API_KEY"), user_id["response"]["steamid"]))
 
     return games_info.read()
