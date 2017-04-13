@@ -54,4 +54,4 @@ def userinfo():
         message = "That account doesn't have any games!"
         return render_template("error.html", message=message)
 
-    return games_info
+    return jsonify(games_info)
