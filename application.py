@@ -47,8 +47,7 @@ def userinfo():
                                             .format(os.environ.get("API_KEY"), user_id["response"]["steamid"]))
     # If it didn't work, give an error.
     except:
-        message = "That doesn't seem to be a valid Steam ID." + \
-                  "</p><p>Try using <a href=\"https://steamid.xyz/\">https://steamid.xyz/</a>"
+        message = "That doesn't seem to be a valid Steam ID."
         return render_template("error.html", message=message)
 
     if games_info["game_count"] == 0:
