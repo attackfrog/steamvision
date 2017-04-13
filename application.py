@@ -1,5 +1,5 @@
 import os
-import json
+import urllib
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
 
@@ -19,6 +19,10 @@ def userinfo():
     if not os.environ.get("API_KEY"):
         raise RuntimeError("API Key not set.")
 
-    gamesInfo = json.load("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid=76561197960434622&format=json".format(os.environ.get("API_KEY")))
+    games_info = urllib.request.urlopen(
+        "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid=76561197960434622&format=json"
+        .format(os.environ.get("API_KEY")))
 
-    return gamesInfo
+    # gamesInfo = json.load("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid=76561197960434622&format=json".format(os.environ.get("API_KEY")))
+
+    return games_info
