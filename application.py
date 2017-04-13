@@ -1,5 +1,6 @@
 import os
 import urllib
+
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
 
@@ -25,4 +26,4 @@ def userinfo():
 
     # gamesInfo = json.load("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid=76561197960434622&format=json".format(os.environ.get("API_KEY")))
 
-    return jsonify(games_info)
+    return games_info.read()
