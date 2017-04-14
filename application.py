@@ -34,7 +34,7 @@ def user():
     else:
         if "steamcommunity.com/id/" in user_id:
             # If it is, remove the URL part if present
-            user_id = user_id[user_id.rfind("/"):]
+            user_id = user_id[user_id.rfind("/")+1:]
 
         # Try vanity in Steam API
         user_id_info = json.load(urllib.request.urlopen(
