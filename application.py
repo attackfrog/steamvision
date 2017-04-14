@@ -84,6 +84,8 @@ def addgame():
     if not request.args.get("appid"):
         raise RuntimeError("Missing appid")
 
+    appid = request.args.get("appid")
+
     # Get webpage for appid
     try:
         page = urllib.request.urlopen("http://store.steampowered.com/app/{}/".format(appid))
