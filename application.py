@@ -5,7 +5,7 @@ import json
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
 
-from helpers import get_categories
+from helpers import get_game_info
 
 # configure application
 app = Flask(__name__)
@@ -46,7 +46,6 @@ def user():
                 user_id = user_id[:len(user_id) - 1]
             user_id = user_id[user_id.rfind("/")+1:]
 
-
         # Try vanity in Steam API
         user_id_info = json.load(urllib.request.urlopen(
             "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={}&vanityurl={}"
@@ -84,16 +83,4 @@ def addgame():
     if not request.args.get("appid"):
         raise RuntimeError("Missing appid")
 
-    appid = request.args.get("appid")
-
-    # Get webpage for appid
-    try:
-        page = urllib.request.urlopen("http://store.steampowered.com/app/{}/".format(appid))
-    except:
-        raise RuntimeError("Failed to open http://store.steampowered.com/app/{}/".format(appid))
-
-    categories = get_categories(page)
-    if categories == None:
-        raise RuntimeError("Invalid appid")
-
-    return jsonify(categories)
+    return jsonify(get_game_info(request.args.get("appid")))
