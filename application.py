@@ -51,7 +51,7 @@ def user():
 
     # Try accessing the user's games list
     try:
-        games_info = json.load(urllib.request.urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json"
+        games_info = json.load(urllib.request.urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&include_appinfo=1&format=json"
                                             .format(os.environ.get("API_KEY"), steam_id)))
     # If it didn't work, give an error.
     except:
