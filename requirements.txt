@@ -3,3 +3,6 @@ Flask-JSGlue
 
 gunicorn
 gevent
+
+lxml
+beautifulsoup4

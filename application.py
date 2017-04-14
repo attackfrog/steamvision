@@ -5,9 +5,12 @@ import json
 from flask import Flask, jsonify, render_template, request, url_for
 from flask_jsglue import JSGlue
 
+from helpers import get_categories
+
 # configure application
 app = Flask(__name__)
 JSGlue(app)
+
 
 @app.route("/")
 def index():
@@ -21,6 +24,11 @@ def user():
     # Make sure (Steam) API key is set, just in case something has gone horribly wrong
     if not os.environ.get("API_KEY"):
         raise RuntimeError("API Key not set.")
+
+    # Make sure an id was provided
+    if not request.args.get("id"):
+        message = "You didn't provide an ID."
+        return render_template("error.html", message=message)
 
     # Put the id in a variable to make it more succinct to access
     user_id = request.args.get("id")
@@ -55,14 +63,35 @@ def user():
     # Try accessing the user's games list
     try:
         games_info = json.load(urllib.request.urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&include_appinfo=1&format=json"
-                                            .format(os.environ.get("API_KEY"), steam_id)))
-    # If it didn't work, give an error.
+                               .format(os.environ.get("API_KEY"), steam_id)))
+    # If it didn't work, give an error
     except:
         message = "That doesn't seem to be a valid Steam ID."
         return render_template("error.html", message=message)
 
+    # If the account has no games, tell the user
     if games_info["response"]["game_count"] == 0:
         message = "That account doesn't have any games!"
         return render_template("error.html", message=message)
 
     return jsonify(games_info["response"])
+
+@app.route("/addgame")
+def addgame():
+    """Adds information about a game by Steam appid to the database."""
+
+    # Make sure an appid was provided
+    if not request.args.get("appid"):
+        raise RuntimeError("Missing appid")
+
+    # Get webpage for appid
+    try:
+        page = urllib.request.urlopen("http://store.steampowered.com/app/{}/".format(appid))
+    except:
+        raise RuntimeError("Failed to open http://store.steampowered.com/app/{}/".format(appid))
+
+    categories = get_categories(page)
+    if categories == None:
+        raise RuntimeError("Invalid appid")
+
+    return jsonify(categories)
