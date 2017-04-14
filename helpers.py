@@ -19,19 +19,16 @@ def get_game_info(appid):
     if soup.title.contents[0] == "Welcome to Steam":
         return None
 
-    # Get categories
-    categories = get_categories(soup)
-    ratings = get_ratings(soup)
-
     return {
-        "categories": categories,
-        "ratings": ratings
+        "categories": get_categories(soup),
+        "ratings": get_ratings(soup),
+        "description": get_description(soup)
     }
 
 def get_categories(soup):
-    """Scrapes game category information from a parsed Steam Store page."""
+    """Scrapes category information from a parsed Steam Store game page."""
 
-    # Get appropriate <div>
+    # Get appropriate <div> and check that it exists
     div = soup.find(class_="glance_tags")
     if div is None:
         raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\"")
@@ -53,9 +50,9 @@ def get_categories(soup):
     return categories
 
 def get_ratings(soup):
-    """Scrapes game ratings summary information from a parsed Steam Store page."""
+    """Scrapes ratings summary information from a parsed Steam Store game page."""
 
-    # Get appropriate <div>s
+    # Get appropriate <div>s and check that they exist
     divs = soup.find_all(class_="game_review_summary")
     if divs is None:
         raise RuntimeError("The Steam Store layout changed! Missing \"game_review_summary\"")
@@ -92,7 +89,18 @@ def get_ratings(soup):
         })
         info.append({
             "summary": divs[0].contents[0],
-            "details": div[0].contents[0].strip()[2:]
+            "details": div[0].contents[0].strip()[2:]   # Slice to get rid of the "- "
         })
 
     return info
+
+def get_description(soup):
+    """Scrapes description snippet from a parsed Steam Store game page."""
+
+    # Get appropriate <div> and check that it exists
+    div = soup.find(class_="game_description_snippet")
+    if div is None:
+        raise RuntimeError("The Steam Store layout changed! Missing \"game_description_snippet\"")
+
+    # Return its contents
+    return div.contents[0].strip()
