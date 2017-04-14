@@ -14,8 +14,8 @@ def index():
     """Display welcome page."""
     return render_template("index.html")
 
-@app.route("/userinfo")
-def userinfo():
+@app.route("/user")
+def user():
     """Get info from Steam API about a steam user."""
 
     # Make sure (Steam) API key is set, just in case something has gone horribly wrong
@@ -23,28 +23,36 @@ def userinfo():
         raise RuntimeError("API Key not set.")
 
     # Put the id in a variable to make it more succinct to access
-    id = request.args.get("id")
+    user_id = request.args.get("id")
 
     # Check whether it's a Steam ID of the format Steam_0:1:12345678
-    if id[:6].lower() == "steam_" and id[7:8] == ":" and id[9:10] == ":":
+    if user_id[:6].lower() == "steam_" and user_id[7:8] == ":" and user_id[9:10] == ":":
         # If so, convert it to a 64bit SteamID
-        user_id = int(id[10:])*2 + int(0x0110000100000000) + int(id[8:9])
+        steam_id = int(user_id[10:])*2 + int(0x0110000100000000) + int(user_id[8:9])
+
     # If it isn't, check if it's a vanity URL
     else:
+        if "steamcommunity.com/id/" in user_id:
+            # If it is, remove the URL part if present
+            user_id = user_id[user_id.rfind("/"):]
+
+        # Try vanity in Steam API
         user_id_info = json.load(urllib.request.urlopen(
             "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={}&vanityurl={}"
-            .format(os.environ.get("API_KEY"), id)))
-        # If it is, we've got the SteamID
+            .format(os.environ.get("API_KEY"), user_id)))
+
+        # If it works, we've got the SteamID
         if user_id_info["response"]["success"] == 1:
-            user_id = user_id_info["response"]["steamid"]
+            steam_id = user_id_info["response"]["steamid"]
+
         # If it isn't, hopefully they gave us a 64bit SteamID
         else:
-            user_id = id
+            steam_id = user_id
 
     # Try accessing the user's games list
     try:
         games_info = json.load(urllib.request.urlopen("http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&format=json"
-                                            .format(os.environ.get("API_KEY"), user_id)))
+                                            .format(os.environ.get("API_KEY"), steam_id)))
     # If it didn't work, give an error.
     except:
         message = "That doesn't seem to be a valid Steam ID."
@@ -54,4 +62,4 @@ def userinfo():
         message = "That account doesn't have any games!"
         return render_template("error.html", message=message)
 
-    return jsonify(games_info)
+    return jsonify(games_info["response"])
