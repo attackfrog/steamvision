@@ -95,11 +95,12 @@ def get_ratings(soup):
             info.append(blank)
 
         # If it did find something, we're just missing recent reviews
-        info.append(blank)
-        info.append({
-            "summary": divs[0].contents[0],
-            "details": div[0].contents[0].strip()[2:]   # Slice to get rid of the "- "
-        })
+        else:
+            info.append(blank)
+            info.append({
+                "summary": divs[0].contents[0],
+                "details": div[0].contents[0].strip()[2:]   # Slice to get rid of the "- "
+            })
 
     return info
 
