@@ -174,7 +174,8 @@ def get_categories(soup):
     # Get appropriate <div> and check that it exists
     div = soup.find(class_="glance_tags")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\"")
+        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\", (page title:{})"
+                           .format(soup.title.contents[0]))
     tag_type = type(div)
 
     # Create list
@@ -199,7 +200,8 @@ def get_ratings(soup):
     # Get appropriate <div>s and check that they exist
     divs = soup.find_all(class_="game_review_summary")
     if divs is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"game_review_summary\"")
+        raise RuntimeError("The Steam Store layout changed! Missing \"game_review_summary\", (page title:{})"
+                           .format(soup.title.contents[0]))
 
     # Create list
     info = []
@@ -229,7 +231,8 @@ def get_ratings(soup):
         # Get the detailed info from this div instead
         div = soup.find_all(class_="responsive_reviewdesc")
         if div is None:
-            raise RuntimeError("The Steam Store layout changed! Missing \"responsive_reviewdesc\"")
+            raise RuntimeError("The Steam Store layout changed! Missing \"responsive_reviewdesc\", (page title:{})"
+                               .format(soup.title.contents[0]))
 
         # If even that didn't find anything, there are no reviews for this item
         elif len(div) == 0:
@@ -253,7 +256,8 @@ def get_description(soup):
     # Get appropriate <div> and check that it exists
     div = soup.find(class_="game_description_snippet")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"game_description_snippet\"")
+        raise RuntimeError("The Steam Store layout changed! Missing \"game_description_snippet\", (page title:{})"
+                           .format(soup.title.contents[0]))
 
     # Return its contents
     return div.contents[0].strip()
