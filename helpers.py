@@ -160,7 +160,7 @@ def get_game_info(appid):
     # Make sure the appid was valid and we didn't just get the Steam homepage
     if soup.title.contents[0] == "Welcome to Steam":
         return None
-    elif "agecheck" in soup.head["class"]:
+    elif "agecheck" in soup.body["class"]:
         return {
             "categories": ["Age Check"],
             "ratings": [{"summary": "", "details": ""}, {"summary": "", "details": ""}],
