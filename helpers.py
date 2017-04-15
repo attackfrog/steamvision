@@ -63,7 +63,7 @@ def merge_game_info(api_info):
 
     # Initialize return structure
     user_info = {
-        "games_count": api_info["games_count"],
+        "games_count": api_info["game_count"],
         "games": []
     }
 
