@@ -25,6 +25,7 @@ def get_game_info(appid):
         "description": get_description(soup)
     }
 
+
 def get_categories(soup):
     """Scrapes category information from a parsed Steam Store game page."""
 
@@ -48,6 +49,7 @@ def get_categories(soup):
                 categories.append(category)
 
     return categories
+
 
 def get_ratings(soup):
     """Scrapes ratings summary information from a parsed Steam Store game page."""
@@ -75,24 +77,32 @@ def get_ratings(soup):
     if len(info) == 3:
         info.pop()
 
-    # If none of them had those characteristics, it's because the page only has overall reviews, not recent
+    # If none of them had those characteristics, it's because the page is missing either recent reviews or any reviews
     elif len(info) == 0:
+        # Define blank item
+        blank = {
+            "summary": "",
+            "details": ""
+        }
         # Get the detailed info from this div instead
         div = soup.find_all(class_="responsive_reviewdesc")
         if div is None:
             raise RuntimeError("The Steam Store layout changed! Missing \"responsive_reviewdesc\"")
 
-        # Construct the same kind of list, making a blank item in place of recent reviews information
-        info.append({
-            "summary": "",
-            "details": ""
-        })
+        # If even that didn't find anything, there are no reviews for this item
+        elif len(div) == 0:
+            info.append(blank)
+            info.append(blank)
+
+        # If it did find something, we're just missing recent reviews
+        info.append(blank)
         info.append({
             "summary": divs[0].contents[0],
             "details": div[0].contents[0].strip()[2:]   # Slice to get rid of the "- "
         })
 
     return info
+
 
 def get_description(soup):
     """Scrapes description snippet from a parsed Steam Store game page."""
