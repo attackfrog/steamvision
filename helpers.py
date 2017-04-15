@@ -109,7 +109,7 @@ def merge_game_info(api_info):
                               %(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s, 
                               %(ratings_overall_details)s, %(updated)s);""",
                            {"appid": game_info["appid"],
-                            "appname": game_info["name"],
+                            "appname": game_info["appname"],
                             "description": game_info["description"],
                             "categories": game_info["categories"],
                             "ratings_recent_summary": game_info["ratings_recent_summary"],
