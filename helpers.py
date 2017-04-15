@@ -159,7 +159,7 @@ def get_game_info(appid):
 
     # Make sure the appid was valid and we didn't just get the Steam homepage
     if soup.title.contents[0] == "Welcome to Steam":
-        return None
+        raise RuntimeError("No Store page for http://store.steampowered.com/app/{}/".format(appid))
     elif "agecheck" in soup.body["class"]:
         return {
             "categories": ["Age Check"],
@@ -180,8 +180,8 @@ def get_categories(soup):
     # Get appropriate <div> and check that it exists
     div = soup.find(class_="glance_tags")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\", (page:\n{})"
-                           .format(soup.prettify))
+        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\", (page title: {})"
+                           .format(soup.title.contents[0]))
     tag_type = type(div)
 
     # Create list
@@ -206,7 +206,7 @@ def get_ratings(soup):
     # Get appropriate <div>s and check that they exist
     divs = soup.find_all(class_="game_review_summary")
     if divs is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"game_review_summary\", (page title:{})"
+        raise RuntimeError("The Steam Store layout changed! Missing \"game_review_summary\", (page title: {})"
                            .format(soup.title.contents[0]))
 
     # Create list
@@ -237,7 +237,7 @@ def get_ratings(soup):
         # Get the detailed info from this div instead
         div = soup.find_all(class_="responsive_reviewdesc")
         if div is None:
-            raise RuntimeError("The Steam Store layout changed! Missing \"responsive_reviewdesc\", (page title:{})"
+            raise RuntimeError("The Steam Store layout changed! Missing \"responsive_reviewdesc\", (page title: {})"
                                .format(soup.title.contents[0]))
 
         # If even that didn't find anything, there are no reviews for this item
@@ -262,7 +262,7 @@ def get_description(soup):
     # Get appropriate <div> and check that it exists
     div = soup.select("[name='Description']")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"Description\", (page title:{})"
+        raise RuntimeError("The Steam Store layout changed! Missing \"Description\", (page title: {})"
                            .format(soup.title.contents[0]))
 
     # Return its contents
