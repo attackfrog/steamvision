@@ -1,7 +1,10 @@
 import os
-import urllib.request
+import datetime
+
+import urllib.request, urllib.parse
 import json
 from flask import jsonify, render_template
+import psycopg2
 import lxml
 from bs4 import BeautifulSoup
 
@@ -37,7 +40,7 @@ def get_user_info(user_id):
 
     # Try accessing the user's games list
     try:
-        games_info = json.load(urllib.request.urlopen(
+        api_info = json.load(urllib.request.urlopen(
             "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&include_appinfo=1&format=json"
             .format(os.environ.get("API_KEY"), steam_id)))
 
@@ -47,11 +50,99 @@ def get_user_info(user_id):
         return render_template("error.html", message=message)
 
     # If the account has no games, tell the user
-    if games_info["response"]["game_count"] == 0:
+    api_info = api_info["response"]
+    if api_info["game_count"] == 0:
         message = "That account doesn't have any games!"
         return render_template("error.html", message=message)
 
-    return jsonify(games_info["response"])
+    return merge_game_info(api_info)
+
+
+def merge_game_info(api_info):
+    """Merges game information into one JSON structure, and adds it to the database if necessary."""
+
+    # Initialize return structure
+    user_info = {
+        "games_count": api_info["games_count"],
+        "games": []
+    }
+
+    # Connect to database
+    urllib.parse.uses_netloc.append("postgres")
+    url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+    connection = psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
+    cursor = connection.cursor()
+
+    # Iterate through all games in user's library
+    for game in api_info["games"]:
+
+        # Check if game is in database
+        cursor.execute("SELECT appid FROM games WHERE appid = %s;", (game["appid"]))
+        row = cursor.fetchone()
+
+        # If it's not, or the entry is more than 30 days old, insert the game
+        if row is None or (row[10] - datetime.datetime.now()).days > 30:
+            # Scrape game info from store webpage
+            game_scrape = get_game_info(game["appid"])
+
+            # Combine info into one structure
+            game_info = {
+                "appid": game["appid"],
+                "appname": game["name"],
+                "description": game_scrape["description"],
+                "img_icon_url": game["img_icon_url"],
+                "img_logo_url": game["img_logo_url"],
+                "categories": game_scrape["categories"],
+                "ratings_recent_summary": game_scrape["ratings"][0]["summary"],
+                "ratings_recent_details": game_scrape["ratings"][0]["details"],
+                "ratings_overall_summary": game_scrape["ratings"][1]["summary"],
+                "ratings_overall_details": game_scrape["ratings"][1]["details"]
+            }
+            # Insert info into database
+            cursor.execute("""INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s,
+                              %(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s, 
+                              %(ratings_overall_details)s, %(updated)s);""",
+                           {"appid": game_info["appid"],
+                            "appname": game_info["name"],
+                            "description": game_info["description"],
+                            "categories": game_info["categories"],
+                            "ratings_recent_summary": game_info["ratings_recent_summary"],
+                            "ratings_recent_details": game_info["ratings_recent_details"],
+                            "ratings_overall_summary": game_info["ratings_overall_summary"],
+                            "ratings_overall_details": game_info["ratings_overall_details"],
+                            "updated": datetime.datetime.now()
+                            })
+
+        # If the game was in the database, retrieve the information from there
+        else:
+            game_info = {
+                "appid": game["appid"],
+                "appname": game["name"],
+                "description": row[2],
+                "img_icon_url": game["img_icon_url"],
+                "img_logo_url": game["img_logo_url"],
+                "categories": row[3],
+                "ratings_recent_summary": row[4],
+                "ratings_recent_details": row[5],
+                "ratings_overall_summary": row[6],
+                "ratings_overall_details": row[7]
+            }
+
+        # Add info to user's games list
+        user_info["games"].append(game_info)
+
+    # Commit changes and close database connection
+    cursor.close()
+    connection.commit()
+    connection.close()
+
+    return jsonify(user_info)
 
 
 def get_game_info(appid):
