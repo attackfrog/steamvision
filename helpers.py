@@ -260,10 +260,10 @@ def get_description(soup):
     """Scrapes description snippet from a parsed Steam Store game page."""
 
     # Get appropriate <div> and check that it exists
-    div = soup.find(name="Description")
+    div = soup.select("[name='Description']")
     if div is None:
         raise RuntimeError("The Steam Store layout changed! Missing \"Description\", (page title:{})"
                            .format(soup.title.contents[0]))
 
     # Return its contents
-    return div.contents[0].strip()
+    return div[0].attrs["content"]
