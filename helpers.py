@@ -83,7 +83,7 @@ def merge_game_info(api_info):
     for game in api_info["games"]:
 
         # Check if game is in database
-        cursor.execute("SELECT appid FROM games WHERE appid = %s;", (game["appid"]))
+        cursor.execute("SELECT appid FROM games WHERE appid = %s;", (game["appid"],))
         row = cursor.fetchone()
 
         # If it's not, or the entry is more than 30 days old, insert the game
