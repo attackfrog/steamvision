@@ -174,8 +174,8 @@ def get_categories(soup):
     # Get appropriate <div> and check that it exists
     div = soup.find(class_="glance_tags")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\", (page title:{})"
-                           .format(soup.title.contents[0]))
+        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\", (page:\n{})"
+                           .format(soup.prettify))
     tag_type = type(div)
 
     # Create list
