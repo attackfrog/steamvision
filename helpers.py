@@ -160,6 +160,12 @@ def get_game_info(appid):
     # Make sure the appid was valid and we didn't just get the Steam homepage
     if soup.title.contents[0] == "Welcome to Steam":
         return None
+    elif "agecheck" in soup.head["class"]:
+        return {
+            "categories": ["Age Check"],
+            "ratings": [{"summary": "", "details": ""}, {"summary": "", "details": ""}],
+            "description": get_description(soup)
+        }
 
     return {
         "categories": get_categories(soup),
@@ -254,9 +260,9 @@ def get_description(soup):
     """Scrapes description snippet from a parsed Steam Store game page."""
 
     # Get appropriate <div> and check that it exists
-    div = soup.find(class_="game_description_snippet")
+    div = soup.find(name="Description")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"game_description_snippet\", (page title:{})"
+        raise RuntimeError("The Steam Store layout changed! Missing \"Description\", (page title:{})"
                            .format(soup.title.contents[0]))
 
     # Return its contents
