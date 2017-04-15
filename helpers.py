@@ -89,7 +89,7 @@ def merge_game_info(api_info):
         # If it's not, or the entry is more than 30 days old, insert the game
         if row is None or (row[10] - datetime.datetime.now()).days > 30:
 
-            # Scrape game info from store webpage, skipping the game if Store page is missing
+            # Scrape game info from store webpage, skipping the game if it is missing
             game_scrape = get_game_info(game["appid"])
             if game_scrape is None:
                 continue
@@ -183,8 +183,11 @@ def get_categories(soup):
     # Get appropriate <div> and check that it exists
     div = soup.find(class_="glance_tags")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\", (page title: {})"
-                           .format(soup.title.contents[0]))
+        # If not, this may be an age check page that displays categories
+        div = soup.find(class_="agegate_tags")
+        if div is None:
+            raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\" and \"agegate_tags\", (page title: {})"
+                               .format(soup.title.contents[0]))
     tag_type = type(div)
 
     # Create list
