@@ -6,3 +6,5 @@ gevent
 
 lxml
 beautifulsoup4
+
+psycopg2
