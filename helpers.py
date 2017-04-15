@@ -161,11 +161,11 @@ def get_game_info(appid):
     if soup.title.contents[0] == "Welcome to Steam":
         return None
 
-    return jsonify({
+    return {
         "categories": get_categories(soup),
         "ratings": get_ratings(soup),
         "description": get_description(soup)
-    })
+    }
 
 
 def get_categories(soup):
