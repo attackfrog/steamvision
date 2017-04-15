@@ -108,19 +108,19 @@ def merge_game_info(api_info):
                 "ratings_overall_details": game_scrape["ratings"][1]["details"]
             }
             # Insert info into database
-            cursor.execute("""INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s,
-                              %(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s, 
-                              %(ratings_overall_details)s, %(updated)s);""",
-                           {"appid": game_info["appid"],
-                            "appname": game_info["appname"],
-                            "description": game_info["description"],
-                            "categories": game_info["categories"],
-                            "ratings_recent_summary": game_info["ratings_recent_summary"],
-                            "ratings_recent_details": game_info["ratings_recent_details"],
-                            "ratings_overall_summary": game_info["ratings_overall_summary"],
-                            "ratings_overall_details": game_info["ratings_overall_details"],
-                            "updated": datetime.datetime.now()
-                            })
+            # cursor.execute("""INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s,
+            #                   %(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s,
+            #                   %(ratings_overall_details)s, %(updated)s);""",
+            #                {"appid": game_info["appid"],
+            #                 "appname": game_info["appname"],
+            #                 "description": game_info["description"],
+            #                 "categories": game_info["categories"],
+            #                 "ratings_recent_summary": game_info["ratings_recent_summary"],
+            #                 "ratings_recent_details": game_info["ratings_recent_details"],
+            #                 "ratings_overall_summary": game_info["ratings_overall_summary"],
+            #                 "ratings_overall_details": game_info["ratings_overall_details"],
+            #                 "updated": datetime.datetime.now()
+            #                 })
 
         # If the game was in the database, retrieve the information from there
         else:
