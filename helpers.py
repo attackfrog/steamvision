@@ -88,8 +88,11 @@ def merge_game_info(api_info):
 
         # If it's not, or the entry is more than 30 days old, insert the game
         if row is None or (row[10] - datetime.datetime.now()).days > 30:
-            # Scrape game info from store webpage
+
+            # Scrape game info from store webpage, skipping the game if Store page is missing
             game_scrape = get_game_info(game["appid"])
+            if game_scrape is None:
+                continue
 
             # Combine info into one structure
             game_info = {
@@ -159,7 +162,7 @@ def get_game_info(appid):
 
     # Make sure the appid was valid and we didn't just get the Steam homepage
     if soup.title.contents[0] == "Welcome to Steam":
-        raise RuntimeError("No Store page for http://store.steampowered.com/app/{}/".format(appid))
+        return None
     elif "agecheck" in soup.body["class"]:
         return {
             "categories": ["Age Check"],
