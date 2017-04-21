@@ -40,3 +40,10 @@ def game():
         raise RuntimeError("Missing appid")
 
     return get_game_info(request.args.get("appid"))
+
+
+@app.route("/load")
+def load():
+    """Displays the loading page, which gets additional information about the user's games through the /game route."""
+
+    return render_template("loading.html")
