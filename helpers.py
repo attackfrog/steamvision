@@ -50,22 +50,15 @@ def get_user_info(user_id):
         return render_template("error.html", message=message)
 
     # If the account has no games, tell the user
-    api_info = api_info["response"]
-    if api_info["game_count"] == 0:
+    if api_info["response"]["game_count"] == 0:
         message = "That account doesn't have any games!"
         return render_template("error.html", message=message)
 
-    return merge_game_info(api_info)
+    return jsonify(api_info["response"])
 
 
-def merge_game_info(api_info):
-    """Merges game information into one JSON structure, and adds it to the database if necessary."""
-
-    # Initialize return structure
-    user_info = {
-        "games_count": api_info["game_count"],
-        "games": []
-    }
+def get_game_info(appid):
+    """Gets game categories and ratings from the database, or scrapes it from a Steam Store game page if missing."""
 
     # Connect to database
     urllib.parse.uses_netloc.append("postgres")
@@ -79,77 +72,16 @@ def merge_game_info(api_info):
     )
     cursor = connection.cursor()
 
-    # Iterate through all games in user's library
-    for game in api_info["games"]:
-
-        # Check if game is in database
-        cursor.execute("SELECT appid FROM games WHERE appid = %s;", (game["appid"],))
-        row = cursor.fetchone()
-
-        # If it's not, or the entry is more than 30 days old, insert the game
-        if row is None or (row[10] - datetime.datetime.now()).days > 30:
-
-            # Scrape game info from store webpage, skipping the game if it is missing
-            game_scrape = get_game_info(game["appid"])
-            if game_scrape is None:
-                continue
-
-            # Combine info into one structure
-            game_info = {
-                "appid": game["appid"],
-                "appname": game["name"],
-                "description": game_scrape["description"],
-                "img_icon_url": game["img_icon_url"],
-                "img_logo_url": game["img_logo_url"],
-                "categories": game_scrape["categories"],
-                "ratings_recent_summary": game_scrape["ratings"][0]["summary"],
-                "ratings_recent_details": game_scrape["ratings"][0]["details"],
-                "ratings_overall_summary": game_scrape["ratings"][1]["summary"],
-                "ratings_overall_details": game_scrape["ratings"][1]["details"]
-            }
-            # Insert info into database
-            # cursor.execute("""INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s,
-            #                   %(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s,
-            #                   %(ratings_overall_details)s, %(updated)s);""",
-            #                {"appid": game_info["appid"],
-            #                 "appname": game_info["appname"],
-            #                 "description": game_info["description"],
-            #                 "categories": game_info["categories"],
-            #                 "ratings_recent_summary": game_info["ratings_recent_summary"],
-            #                 "ratings_recent_details": game_info["ratings_recent_details"],
-            #                 "ratings_overall_summary": game_info["ratings_overall_summary"],
-            #                 "ratings_overall_details": game_info["ratings_overall_details"],
-            #                 "updated": datetime.datetime.now()
-            #                 })
-
-        # If the game was in the database, retrieve the information from there
-        else:
-            game_info = {
-                "appid": game["appid"],
-                "appname": game["name"],
-                "description": row[2],
-                "img_icon_url": game["img_icon_url"],
-                "img_logo_url": game["img_logo_url"],
-                "categories": row[3],
-                "ratings_recent_summary": row[4],
-                "ratings_recent_details": row[5],
-                "ratings_overall_summary": row[6],
-                "ratings_overall_details": row[7]
-            }
-
-        # Add info to user's games list
-        user_info["games"].append(game_info)
-
-    # Commit changes and close database connection
-    cursor.close()
-    connection.commit()
-    connection.close()
-
-    return jsonify(user_info)
-
-
-def get_game_info(appid):
-    """Scrapes game category and ratings information from a Steam Store game page."""
+    # Check if game is in database & if it is, return that information
+    cursor.execute("SELECT * FROM games WHERE appid=%(appid)s", {"appid": appid})
+    row = cursor.fetchone()
+    if row is not None:
+        print("Got one!")
+        return jsonify({
+            "categories": row[3],
+            "ratings": [{"summary": row[4], "details": row[5]}, {"summary": row[6], "details": row[7]}],
+            "description": row[2]
+        })
 
     # Attempt to get html document for requested game's page
     try:
@@ -161,20 +93,51 @@ def get_game_info(appid):
     soup = BeautifulSoup(page, "lxml")
 
     # Make sure the appid was valid and we didn't just get the Steam homepage
-    if soup.title.contents[0] == "Welcome to Steam":
+    if not soup.title.contents[0].endswith("on Steam"):
+        cursor.close()
+        connection.close()
         return None
-    elif "agecheck" in soup.body["class"]:
-        return {
-            "categories": ["Age Check"],
-            "ratings": [{"summary": "", "details": ""}, {"summary": "", "details": ""}],
-            "description": get_description(soup)
-        }
 
-    return {
-        "categories": get_categories(soup),
-        "ratings": get_ratings(soup),
-        "description": get_description(soup)
-    }
+    # See if it the appid is hidden behind an age check gate & return dummy data if it is :(
+    elif "agecheck" in soup.body["class"]:
+        categories = ["Age Check"]
+        ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
+
+    # If it actually is the page we were looking for, scrape the information from it
+    else:
+        categories = get_categories(soup)
+        ratings = get_ratings(soup)
+
+    # Get the description regardless of age check, as it's still present on those pages
+    description = get_description(soup)
+
+    # Insert the game's information into the database
+    cursor.execute(("INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s, "
+                    "%(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s, "
+                    "%(ratings_overall_details)s, %(updated)s)"),
+                   {
+                       "appid": appid,
+                       "appname": soup.title.contents[0].replace(" on Steam", ""),   # Get game name from page title
+                       "description": description,
+                       "categories": categories,
+                       "ratings_recent_summary": ratings[0]["summary"],
+                       "ratings_recent_details": ratings[0]["details"],
+                       "ratings_overall_summary": ratings[1]["summary"],
+                       "ratings_overall_details": ratings[1]["details"],
+                       "updated": datetime.datetime.now()
+                   })
+
+    # Close database connection
+    cursor.close()
+    connection.commit()
+    connection.close()
+
+    # Return JSON of information
+    return jsonify({
+        "categories": categories,
+        "ratings": ratings,
+        "description": description
+    })
 
 
 def get_categories(soup):

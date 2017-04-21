@@ -17,7 +17,7 @@ def index():
 
 @app.route("/user")
 def user():
-    """Get info from Steam API about a steam user."""
+    """Get info from Steam API about a Steam user as JSON."""
 
     # Make sure (Steam) API key is set, just in case something has gone horribly wrong
     if not os.environ.get("API_KEY"):
@@ -31,9 +31,9 @@ def user():
     return get_user_info(request.args.get("id"))
 
 
-@app.route("/addgame")
-def addgame():
-    """Adds information about a game by Steam appid to the database."""
+@app.route("/game")
+def game():
+    """Gets extra information about a Steam game either from its Steam Store page or the local database as JSON."""
 
     # Make sure an appid was provided
     if not request.args.get("appid"):
