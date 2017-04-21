@@ -5,9 +5,18 @@
 
 
 {% block main %}
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-            <span class="sr-only">60% Complete</span>
+    <div class="container">
+        <h1>Loading games...</h1>
+        <p>If you have a lot of uncommon games, this can take a while.</p>
+
+        <div class="well well-lg">
+            <p>Hollow Knight (123/234)</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60"
+                     aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                    <span class="sr-only">60% Complete</span>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
