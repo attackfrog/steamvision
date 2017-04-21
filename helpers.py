@@ -76,7 +76,6 @@ def get_game_info(appid):
     cursor.execute("SELECT * FROM games WHERE appid=%(appid)s", {"appid": appid})
     row = cursor.fetchone()
     if row is not None:
-        print("Got one!")
         return jsonify({
             "categories": row[3],
             "ratings": [{"summary": row[4], "details": row[5]}, {"summary": row[6], "details": row[7]}],
