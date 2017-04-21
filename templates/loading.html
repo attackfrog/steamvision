@@ -23,4 +23,13 @@
 
 
 {% block js %}
+    <script>
+        $(document).ready(function () {
+            var userid = '{{ id }}';
+            var url = '{ url_for("user") }}/?id=' + userid;
+            $.getJSON(url, function (data) {
+                alert(data.game_count);
+            })
+        })
+    </script>
 {% endblock %}

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, render_template, request, url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_jsglue import JSGlue
 
 from helpers import get_user_info, get_game_info
@@ -46,4 +46,7 @@ def game():
 def load():
     """Displays the loading page, which gets additional information about the user's games through the /game route."""
 
-    return render_template("loading.html")
+    if not request.args.get("id"):
+        return redirect(url_for("index"))
+
+    return render_template("loading.html", id=request.args.get("id"))
