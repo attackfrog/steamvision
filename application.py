@@ -50,3 +50,10 @@ def load():
         return redirect(url_for("index"))
 
     return render_template("loading.html", id=request.args.get("id"))
+
+
+@app.route("/error")
+def error():
+    """Displays an error page with optional error message."""
+
+    return render_template("error.html", message=request.args.get("e"))
