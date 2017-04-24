@@ -10,11 +10,10 @@
         <p>If you have a lot of uncommon games, this can take a while.</p>
 
         <div class="well well-lg">
-            <p>Hollow Knight (123/234)</p>
+            <p id="game_name">Hollow Knight (123/234)</p>
             <div class="progress">
-                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60"
+                <div id="load_bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60"
                      aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                    <span class="sr-only">60% Complete</span>
                 </div>
             </div>
         </div>
@@ -25,11 +24,42 @@
 {% block scripts %}
     <script>
         $(document).ready(function () {
-            var userid = '{{ id }}';
-            var url = '{{ url_for("user") }}?id=' + userid;
-            $.getJSON(url, function (data) {
-                alert(data.game_count);
-            })
-        })
+            // Get user data from server
+            var url = '{{ url_for("user") }}?id={{ id }}';
+            var data = $.getJSON(url, function() {})
+                .done(function() {
+                    data = data.responseJSON;
+
+                    // Store game count in browser's local storage
+                    localStorage.game_count = data.game_count;
+
+                    // Iterate through games, adding info to each
+                    var i = 1;
+                    data.games.forEach(function(game) {
+                        game_url = '{{ url_for("game") }}?appid=' + game.appid;
+                        extra = $.getJSON(game_url, function() {})
+                            .done(function() {
+                                game.categories = extra.categories;
+                                game.description = extra.description;
+                                game.ratings = extra.ratings;
+
+                                // Update loading bar
+                                $("#game_name").text(game.name + ' (' + i + '/' + data.game_count + ')');
+                                $("#load_bar").css('width', (i++/data.game_count*100).toFixed() + '%');
+                            })
+                            .fail(function() {
+                                console.log("Couldn't get data for appid:" + game.appid);
+                            })
+                    })
+
+                    // Store games in local storage
+                    localStorage.games = JSON.stringify(data.games);
+                    console.log("Holy cannoli!");
+                })
+                .fail(function() {
+                    console.log("Couldn't get user data.")
+                    // window.location = '{{ url_for("error") }}';
+                })
+        });
     </script>
 {% endblock %}
