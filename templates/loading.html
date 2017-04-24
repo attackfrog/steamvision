@@ -39,26 +39,24 @@
                         game_url = '{{ url_for("game") }}?appid=' + game.appid;
                         extra = $.getJSON(game_url, function() {})
                             .done(function() {
+                                // Update info
                                 game.categories = extra.categories;
                                 game.description = extra.description;
                                 game.ratings = extra.ratings;
-
+                            })
+                            .always(function() {
                                 // Update loading bar
                                 $("#game_name").text(game.name + ' (' + i + '/' + data.game_count + ')');
                                 $("#load_bar").css('width', (i++/data.game_count*100).toFixed() + '%');
                             })
-                            .fail(function() {
-                                console.log("Couldn't get data for appid:" + game.appid);
-                            })
                     })
-
                     // Store games in local storage
                     localStorage.games = JSON.stringify(data.games);
                     console.log("Holy cannoli!");
                 })
                 .fail(function() {
                     console.log("Couldn't get user data.")
-                    // window.location = '{{ url_for("error") }}';
+                    window.location = '{{ url_for("error") }}';
                 })
         });
     </script>

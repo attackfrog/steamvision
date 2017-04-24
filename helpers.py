@@ -72,10 +72,10 @@ def get_game_info(appid):
     )
     cursor = connection.cursor()
 
-    # Check if game is in database & if it is, return that information
+    # Check if game is in database & if it's there and the data is <30 days old, return that information
     cursor.execute("SELECT * FROM games WHERE appid=%(appid)s", {"appid": appid})
     row = cursor.fetchone()
-    if row is not None:
+    if row is not None and row[8] + datetime.timedelta(30) < datetime.datetime.now():
         return jsonify({
             "categories": row[3],
             "ratings": [{"summary": row[4], "details": row[5]}, {"summary": row[6], "details": row[7]}],
@@ -91,24 +91,23 @@ def get_game_info(appid):
     # Load page into the magical html scraper
     soup = BeautifulSoup(page, "lxml")
 
-    # Make sure the appid was valid and we didn't just get the Steam homepage
+    # Check if we got the Store homepage: if we did the game is missing for some reason
     if not soup.title.contents[0].endswith("on Steam"):
-        cursor.close()
-        connection.close()
-        return None
+        categories = ["Missing?"]
+        ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
+        description = "This game seems to have vanished from the Steam Store."
 
-    # See if it the appid is hidden behind an age check gate & return dummy data if it is :(
+    # See if it the appid is hidden behind an age check gate & return dummy data (but real description) if it is
     elif "agecheck" in soup.body["class"]:
         categories = ["Age Check"]
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
+        description = get_description(soup)
 
     # If it actually is the page we were looking for, scrape the information from it
     else:
         categories = get_categories(soup)
         ratings = get_ratings(soup)
-
-    # Get the description regardless of age check, as it's still present on those pages
-    description = get_description(soup)
+        description = get_description(soup)
 
     # Insert the game's information into the database
     cursor.execute(("INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s, "
