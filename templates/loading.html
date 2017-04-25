@@ -35,6 +35,7 @@
 
                     // Iterate through games, adding info to each
                     var i = 1;
+                    var game_count = Number(data.game_count);
                     data.games.forEach(function(game) {
                         var game_url = '{{ url_for("game") }}?appid=' + game.appid;
                         var extra = $.getJSON(game_url, function() {})
@@ -46,14 +47,15 @@
                             })
                             .always(function() {
                                 // Update loading bar
-                                var percent = (i/data.game_count*100).toFixed();
-                                $("#game_name").text(game.name + ' (' + i + '/' + data.game_count + ')');
+                                var percent = (i/game_count*100).toFixed();
+                                $("#game_name").text(game.name + ' (' + i + '/' + game_count + ')');
                                 $("#load_bar").css('width', percent + '%');
                                 $("#load_bar").attr("aria-valuenow", percent);
 
-                                if (i == data.game_count) {
+                                if (i == game_count) {
                                     // Store games in local storage when all are loaded in
                                     localStorage.games = JSON.stringify(data.games);
+                                    console.log("Games Stored!")
                                 }
                                 // Increment game counter
                                 i++;
