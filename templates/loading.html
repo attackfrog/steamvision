@@ -51,8 +51,9 @@
                                 // Update loading bar
                                 var percent = (i/game_count*100).toFixed();
                                 $("#game_name").text(game.name + ' (' + i + '/' + game_count + ')');
-                                $("#load_bar").css('width', percent + '%');
-                                $("#load_bar").attr("aria-valuenow", percent);
+                                var load_bar = $("#load_bar");
+                                load_bar.css('width', percent + '%');
+                                load_bar.attr("aria-valuenow", percent);
 
                                 // Store games in local storage if all are loaded in
                                 if (i == game_count) {
