@@ -10,9 +10,9 @@
         <p>If you have a lot of uncommon games, this can take a while.</p>
 
         <div class="well well-lg">
-            <p id="game_name">Hollow Knight (123/234)</p>
+            <p id="game_name">Starting up...</p>
             <div class="progress">
-                <div id="load_bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60"
+                <div id="load_bar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0"
                      aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
                 </div>
             </div>
@@ -36,8 +36,8 @@
                     // Iterate through games, adding info to each
                     var i = 1;
                     data.games.forEach(function(game) {
-                        game_url = '{{ url_for("game") }}?appid=' + game.appid;
-                        extra = $.getJSON(game_url, function() {})
+                        var game_url = '{{ url_for("game") }}?appid=' + game.appid;
+                        var extra = $.getJSON(game_url, function() {})
                             .done(function() {
                                 // Update info
                                 game.categories = extra.categories;
@@ -46,8 +46,10 @@
                             })
                             .always(function() {
                                 // Update loading bar
+                                var percent = (i/data.game_count*100).toFixed();
                                 $("#game_name").text(game.name + ' (' + i + '/' + data.game_count + ')');
-                                $("#load_bar").css('width', (i++/data.game_count*100).toFixed() + '%');
+                                $("#load_bar").css('width', percent + '%');
+                                $("#load_bar").attr("aria-valuenow", percent);
                             })
                     })
                     // Store games in local storage
