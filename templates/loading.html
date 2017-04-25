@@ -44,6 +44,7 @@
                                 game.categories = extra.categories;
                                 game.description = extra.description;
                                 game.ratings = extra.ratings;
+                                console.log("Toot!")
                             })
                             .always(function() {
                                 // Update loading bar
@@ -61,13 +62,9 @@
                                 i++;
                             })
                     })
-
-                    if (i == data.game_count) {
-                        console.log("Holy guacamole!");
-                    }
                 })
                 .fail(function() {
-                    console.log("Couldn't get user data.")
+                    console.log("Couldn't get user data.");
                     window.location = '{{ url_for("error") }}';
                 })
         });
