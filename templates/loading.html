@@ -33,29 +33,19 @@
                     // Store game count in browser's local storage
                     localStorage.game_count = data.game_count;
 
-                    // Create array to store games
-                    var games = [];
-
                     // Iterate through games, adding info to each
-                    var i;
+                    var i = 1;
                     var game_count = Number(data.game_count);
 
                     data.games.forEach(function(game) {
                         var game_url = '{{ url_for("game") }}?appid=' + game.appid;
                         var extra = $.getJSON(game_url, function() {})
                             .done(function() {
-                                // Add game to array
-                                var next_game = {
-                                    appid: game.appid,
-                                    name: game.name,
-                                    description: extra.description,
-                                    img_icon_url: game.img_icon_url,
-                                    img_logo_url: game.img_logo_url,
-                                    playtime_forever: game.playtime_forever,
-                                    categories: extra.categories,
-                                    ratings: extra.ratings
-                                }
-                                i = games.push(next_game);
+                                // Add extra info
+                                extra = extra.responseJSON;
+                                game.categories = extra.categories;
+                                game.description = extra.description;
+                                game.ratings = extra.ratings;
                             })
                             .always(function() {
                                 // Update loading bar
@@ -64,9 +54,9 @@
                                 $("#load_bar").css('width', percent + '%');
                                 $("#load_bar").attr("aria-valuenow", percent);
 
+                                // Store games in local storage if all are loaded in
                                 if (i == game_count) {
-                                    // Store games in local storage when all are loaded in
-                                    localStorage.games = JSON.stringify(games);
+                                    localStorage.games = JSON.stringify(data.games);
                                     console.log("Games Stored!")
                                 }
                                 // Increment game counter
