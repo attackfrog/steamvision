@@ -218,6 +218,11 @@ def get_ratings(soup):
     if len(info) == 1:
         info.insert(0, blank)
 
+        # Unless there's not enough reviews to generate a score, in which case don't keep the entry
+        if info[1]["details"] == "Need more user reviews to generate a score":
+            info.pop()
+            info.append(blank)
+
     # If none of them had those characteristics, it's because the page is missing either recent reviews or any reviews
     elif len(info) == 0:
 
