@@ -39,7 +39,7 @@ def get_user_games(user_id):
             "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&include_appinfo=1"
             .format(os.environ.get("API_KEY"), steam_id)))
 
-    # If it didn't work, return an error value
+    # If it didn't work, return an error value (HTTP "No Content")
     except:
         return ('', 204)
 
@@ -58,7 +58,7 @@ def get_user_profile(user_id):
             "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}"
             .format(os.environ.get("API_KEY"), steam_id)))
 
-    # If it didn't work, return an error value
+    # If it didn't work, return an error value (HTTP "No Content")
     except:
         return ('', 204)
 
