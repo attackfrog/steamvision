@@ -55,7 +55,9 @@
                     })
                     // Store games in local storage
                     localStorage.games = JSON.stringify(data.games);
-                    console.log("Holy cannoli!");
+                    if (i == data.game_count) {
+                        console.log("Holy guacamole!");
+                    }
                 })
                 .fail(function() {
                     console.log("Couldn't get user data.")

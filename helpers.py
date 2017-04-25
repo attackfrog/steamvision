@@ -193,28 +193,34 @@ def get_ratings(soup):
     # Create list
     info = []
 
+    # Define blank item
+    blank = {
+        "summary": "",
+        "details": ""
+    }
+
     # Extract summary (eg. "Mixed") and detailed info (eg. "55% of 18 user reviews...") from divs
     for div in divs:
+
         # Ignore divs that don't have these characteristics
         try:
-            info.append({
-                "summary": div.contents[0],
-                "details": div["data-store-tooltip"]
-            })
+            # Also ignore the div if it is at the bottom, by the reviews section
+            if not div.find_next()["class"][0] == "loading_more_reviews":
+
+                info.append({
+                    "summary": div.contents[0],
+                    "details": div["data-store-tooltip"]
+                })
         except:
             pass
 
-    # Throw away the third set if it's there: it seems to be from a custom filter option on the page
-    if len(info) == 3:
-        info.pop()
+    # If just one set was found, it's probably overall reviews, so insert a blank entry for recent
+    if len(info) == 1:
+        info.insert(0, blank)
 
     # If none of them had those characteristics, it's because the page is missing either recent reviews or any reviews
     elif len(info) == 0:
-        # Define blank item
-        blank = {
-            "summary": "",
-            "details": ""
-        }
+
         # Get the detailed info from this div instead
         div = soup.find_all(class_="responsive_reviewdesc")
         if div is None:
