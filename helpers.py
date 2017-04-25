@@ -27,8 +27,46 @@ def get_db():
     return db
 
 
-def get_user_info(user_id):
-    """Gets user information from Steam API, accepting several user id input types."""
+def get_user_games(user_id):
+    """Gets user information from Steam API."""
+
+    # Attempt to convert user_id to a Steam ID, if it isn't one
+    steam_id = guess_steam_id(user_id)
+
+    # Try accessing the user's games list
+    try:
+        api_info = json.load(urllib.request.urlopen(
+            "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&include_appinfo=1"
+            .format(os.environ.get("API_KEY"), steam_id)))
+
+    # If it didn't work, return an error value
+    except:
+        return None
+
+    return jsonify(api_info["response"])
+
+
+def get_user_profile(user_id):
+    """Gets user profile information from Steam API."""
+
+    # Attempt to convert user_id to a Steam ID, if it isn't one
+    steam_id = guess_steam_id(user_id)
+
+    # Try accessing user's profile information
+    try:
+        api_info = json.load(urllib.request.urlopen(
+            "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}"
+            .format(os.environ.get("API_KEY"), steam_id)))
+
+    # If it didn't work, return an error value
+    except:
+        return None
+
+    return jsonify(api_info["response"]["players"][0])
+
+
+def guess_steam_id(user_id):
+    """Returns a best guess for a user's Steam ID, from a few different input types."""
 
     # Check whether it's a Steam ID of the format Steam_0:1:12345678
     if user_id[:6].lower() == "steam_" and user_id[7:8] == ":" and user_id[9:10] == ":":
@@ -46,7 +84,7 @@ def get_user_info(user_id):
         # Try vanity in Steam API
         user_id_info = json.load(urllib.request.urlopen(
             "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/?key={}&vanityurl={}"
-            .format(os.environ.get("API_KEY"), user_id)))
+                .format(os.environ.get("API_KEY"), user_id)))
 
         # If it works, we've got the SteamID
         if user_id_info["response"]["success"] == 1:
@@ -56,23 +94,7 @@ def get_user_info(user_id):
         else:
             steam_id = user_id
 
-    # Try accessing the user's games list
-    try:
-        api_info = json.load(urllib.request.urlopen(
-            "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={}&steamid={}&include_appinfo=1&format=json"
-            .format(os.environ.get("API_KEY"), steam_id)))
-
-    # If it didn't work, give an error
-    except:
-        message = "That doesn't seem to be a valid Steam ID."
-        return render_template("error.html", message=message)
-
-    # If the account has no games, tell the user
-    if api_info["response"]["game_count"] == 0:
-        message = "That account doesn't have any games!"
-        return render_template("error.html", message=message)
-
-    return jsonify(api_info["response"])
+    return steam_id
 
 
 def get_game_info(appid):

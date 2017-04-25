@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, g
 from flask_jsglue import JSGlue
 
-from helpers import get_user_info, get_game_info
+from helpers import get_user_games, get_user_profile, get_game_info
 
 # configure application
 app = Flask(__name__)
@@ -15,9 +15,19 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/user")
-def user():
-    """Get info from Steam API about a Steam user as JSON."""
+@app.route("/load")
+def load():
+    """Displays the loading page, which loads the user's games into browser storage."""
+
+    if not request.args.get("id"):
+        return redirect(url_for("index"))
+
+    return render_template("loading.html", id=request.args.get("id"))
+
+
+@app.route("/user_games")
+def user_games():
+    """Get a Steam user's list of games from Steam API as JSON."""
 
     # Make sure (Steam) API key is set, just in case something has gone horribly wrong
     if not os.environ.get("API_KEY"):
@@ -25,10 +35,24 @@ def user():
 
     # Make sure an id was provided
     if not request.args.get("id"):
-        message = "You didn't provide an ID."
-        return render_template("error.html", message=message)
+        return None
 
-    return get_user_info(request.args.get("id"))
+    return get_user_games(request.args.get("id"))
+
+
+@app.route("/user_profile")
+def user_profile():
+    """Get a Steam user's profile information from Steam API as JSON."""
+
+    # Make sure (Steam) API key is set, just in case something has gone horribly wrong
+    if not os.environ.get("API_KEY"):
+        raise RuntimeError("API Key not set.")
+
+    # Make sure an id was provided
+    if not request.args.get("id"):
+        return None
+
+    return get_user_profile(request.args.get("id"))
 
 
 @app.route("/game")
@@ -42,21 +66,14 @@ def game():
     return get_game_info(request.args.get("appid"))
 
 
-@app.route("/load")
-def load():
-    """Displays the loading page, which gets additional information about the user's games through the /game route."""
-
-    if not request.args.get("id"):
-        return redirect(url_for("index"))
-
-    return render_template("loading.html", id=request.args.get("id"))
-
-
 @app.route("/error")
 def error():
     """Displays an error page with optional error message."""
 
-    return render_template("error.html", message=request.args.get("e"))
+    if not request.args.get("e"):
+        return render_template("error.html")
+    else:
+        return render_template("error.html", message=request.args.get("e"))
 
 
 @app.teardown_appcontext

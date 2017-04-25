@@ -24,9 +24,27 @@
 {% block scripts %}
     <script>
         $(document).ready(function () {
-            // Get user data from server
-            var url = '{{ url_for("user") }}?id={{ id }}';
-            var data = $.getJSON(url, function() {})
+            // Check if user's profile is private
+            var url = '{{ url_for("user_profile") }}?id={{ id }}';
+            var profile = $.getJSON(url)
+                .done(function() {
+                    profile = profile.responseJSON;
+
+                    // If it's private, inform the user
+                    if (profile.communityvisibilitystate != 3) {
+                        var message = 'That profile is private, so SteamView can\'t scan it.'
+                        window.location = '{{ url_for("error") }}?e=' + message;
+                    }
+                })
+                // If the request failed, inform the user
+                .fail(function() {
+                    var message = 'That user ID is invalid.'
+                    window.location = '{{ url_for("error") }}?e=' + message;
+                })
+
+            // Get user games from server
+            url = '{{ url_for("user_games") }}?id={{ id }}';
+            var data = $.getJSON(url)
                 .done(function() {
                     data = data.responseJSON;
 
@@ -73,8 +91,8 @@
                 })
                 // If for some reason getting user data fails, display the error page
                 .fail(function() {
-                    console.log("Failed to get user data.");
-                    window.location = '{{ url_for("error") }}';
+                    var message = 'That user ID is invalid.'
+                    window.location = '{{ url_for("error") }}?e=' + message;
                 })
         });
     </script>
