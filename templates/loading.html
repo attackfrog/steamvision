@@ -50,11 +50,16 @@
                                 $("#game_name").text(game.name + ' (' + i + '/' + data.game_count + ')');
                                 $("#load_bar").css('width', percent + '%');
                                 $("#load_bar").attr("aria-valuenow", percent);
+
+                                if (i == data.game_count) {
+                                    // Store games in local storage when all are loaded in
+                                    localStorage.games = JSON.stringify(data.games);
+                                }
+                                // Increment game counter
                                 i++;
                             })
                     })
-                    // Store games in local storage
-                    localStorage.games = JSON.stringify(data.games);
+
                     if (i == data.game_count) {
                         console.log("Holy guacamole!");
                     }
