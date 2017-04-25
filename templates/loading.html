@@ -41,10 +41,10 @@
                         var extra = $.getJSON(game_url, function() {})
                             .done(function() {
                                 // Update info
-                                game.categories = extra.categories;
-                                game.description = extra.description;
-                                game.ratings = extra.ratings;
-                                console.log(game.description);
+                                game["categories"] = extra.categories;
+                                game["description"] = extra.description;
+                                game["ratings"] = extra.ratings;
+                                console.log(game["description"]);
                             })
                             .always(function() {
                                 // Update loading bar
