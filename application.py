@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, g
 from flask_jsglue import JSGlue
 
 from helpers import get_user_info, get_game_info
@@ -57,3 +57,12 @@ def error():
     """Displays an error page with optional error message."""
 
     return render_template("error.html", message=request.args.get("e"))
+
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    """Closes the database connection (if open) when the app shuts down."""
+
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()

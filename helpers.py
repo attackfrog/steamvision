@@ -9,6 +9,24 @@ import lxml
 from bs4 import BeautifulSoup
 
 
+def get_db():
+    """Returns a database connection, connecting to the database if necessary."""
+
+    db = getattr(g, '_database', None)
+    if db is None:
+        # Connect to database
+        urllib.parse.uses_netloc.append("postgres")
+        url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+        db = g._database = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
+    return db
+
+
 def get_user_info(user_id):
     """Gets user information from Steam API, accepting several user id input types."""
 
@@ -132,33 +150,6 @@ def get_game_info(appid):
         "ratings": ratings,
         "description": description
     })
-
-
-def get_db():
-    """Returns a database connection, connecting to the database if necessary."""
-
-    db = getattr(g, '_database', None)
-    if db is None:
-        # Connect to database
-        urllib.parse.uses_netloc.append("postgres")
-        url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
-        db = g._database = psycopg2.connect(
-            database=url.path[1:],
-            user=url.username,
-            password=url.password,
-            host=url.hostname,
-            port=url.port
-        )
-    return db
-
-
-@app.teardown_appcontext
-def teardown_db(exception):
-    """Closes the database connection (if open) when the app shuts down."""
-
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
 
 
 def get_categories(soup):
