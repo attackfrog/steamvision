@@ -85,7 +85,7 @@ def get_game_info(appid):
     # Check if game is in database & if it's there and the data is <30 days old, return that information
     cursor.execute("SELECT * FROM games WHERE appid=%(appid)s", {"appid": appid})
     row = cursor.fetchone()
-    if row is not None and row[8] + datetime.timedelta(30) < datetime.datetime.now():
+    if row is not None and row[8] + datetime.timedelta(30) > datetime.datetime.now():
 
         # Close cursor
         cursor.close()
