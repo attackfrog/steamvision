@@ -35,7 +35,7 @@ def user_games():
 
     # Make sure an id was provided
     if not request.args.get("id"):
-        return None
+        return ('', 204)
 
     return get_user_games(request.args.get("id"))
 
@@ -50,7 +50,7 @@ def user_profile():
 
     # Make sure an id was provided
     if not request.args.get("id"):
-        return None
+        return ('', 204)
 
     return get_user_profile(request.args.get("id"))
 

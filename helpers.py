@@ -41,7 +41,7 @@ def get_user_games(user_id):
 
     # If it didn't work, return an error value
     except:
-        return None
+        return ('', 204)
 
     return jsonify(api_info["response"])
 
@@ -60,7 +60,7 @@ def get_user_profile(user_id):
 
     # If it didn't work, return an error value
     except:
-        return None
+        return ('', 204)
 
     return jsonify(api_info["response"]["players"][0])
 
