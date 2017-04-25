@@ -3,7 +3,7 @@ import datetime
 
 import urllib.request, urllib.parse
 import json
-from flask import jsonify, render_template
+from flask import jsonify, render_template, g
 import psycopg2
 import lxml
 from bs4 import BeautifulSoup
@@ -60,16 +60,8 @@ def get_user_info(user_id):
 def get_game_info(appid):
     """Gets game categories and ratings from the database, or scrapes it from a Steam Store game page if missing."""
 
-    # Connect to database
-    urllib.parse.uses_netloc.append("postgres")
-    url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
-    connection = psycopg2.connect(
-        database=url.path[1:],
-        user=url.username,
-        password=url.password,
-        host=url.hostname,
-        port=url.port
-    )
+    # Get database connection and open cursor
+    connection = get_db()
     cursor = connection.cursor()
 
     # Check if game is in database & if it's there and the data is <30 days old, return that information
@@ -77,9 +69,8 @@ def get_game_info(appid):
     row = cursor.fetchone()
     if row is not None and row[8] + datetime.timedelta(30) < datetime.datetime.now():
 
-        # Close database connection
+        # Close cursor
         cursor.close()
-        connection.close()
 
         # Return info from database
         return jsonify({
@@ -134,7 +125,6 @@ def get_game_info(appid):
     # Close database connection
     cursor.close()
     connection.commit()
-    connection.close()
 
     # Return JSON of information
     return jsonify({
@@ -142,6 +132,33 @@ def get_game_info(appid):
         "ratings": ratings,
         "description": description
     })
+
+
+def get_db():
+    """Returns a database connection, connecting to the database if necessary."""
+
+    db = getattr(g, '_database', None)
+    if db is None:
+        # Connect to database
+        urllib.parse.uses_netloc.append("postgres")
+        url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+        db = g._database = psycopg2.connect(
+            database=url.path[1:],
+            user=url.username,
+            password=url.password,
+            host=url.hostname,
+            port=url.port
+        )
+    return db
+
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    """Closes the database connection (if open) when the app shuts down."""
+
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 
 def get_categories(soup):
