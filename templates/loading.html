@@ -33,22 +33,28 @@
                     // Store game count in browser's local storage
                     localStorage.game_count = data.game_count;
 
-                    // Iterate through games, adding info to each
+                    // Initialize counter variable and record total count
                     var i = 1;
                     var game_count = Number(data.game_count);
 
+                    // Iterate through games, adding info to each
                     data.games.forEach(function(game) {
+                        // Get extra game info from server
                         var game_url = '{{ url_for("game") }}?appid=' + game.appid;
                         var extra = $.getJSON(game_url, function() {})
                             .done(function() {
-                                // Add extra info
+                                // Add the extra info to game's object
                                 extra = extra.responseJSON;
                                 game.categories = extra.categories;
                                 game.description = extra.description;
                                 game.ratings = extra.ratings;
                             })
+                            // Record failures to console
+                            .fail(function() {
+                                console.log('Failed to get info for appid:' + game.appid);
+                            })
                             .always(function() {
-                                // Update loading bar
+                                // Update loading bar text and width
                                 var percent = (i/game_count*100).toFixed();
                                 $("#game_name").text(game.name + ' (' + i + '/' + game_count + ')');
                                 var load_bar = $("#load_bar");
@@ -65,8 +71,9 @@
                             })
                     })
                 })
+                // If for some reason getting user data fails, display the error page
                 .fail(function() {
-                    console.log("Couldn't get user data.");
+                    console.log("Failed to get user data.");
                     window.location = '{{ url_for("error") }}';
                 })
         });
