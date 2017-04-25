@@ -50,6 +50,7 @@
                                 $("#game_name").text(game.name + ' (' + i + '/' + data.game_count + ')');
                                 $("#load_bar").css('width', percent + '%');
                                 $("#load_bar").attr("aria-valuenow", percent);
+                                i++;
                             })
                     })
                     // Store games in local storage
