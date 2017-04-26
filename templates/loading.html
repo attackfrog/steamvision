@@ -58,8 +58,8 @@
                     invalid_id()
                 });
 
-            // Create array to store categories
-            var categories = [];
+            // Create object to store categories and a count of games for each one
+            var categories = {};
 
             // Get user games from server
             url = '{{ url_for("user_games") }}?id={{ id }}';
@@ -90,10 +90,15 @@
                                 game.description = extra.description;
                                 game.ratings = extra.ratings;
 
-                                // Add new categories to the categories list
+                                // Add new categories to the categories object
                                 extra.categories.forEach(function(category) {
-                                    if (categories.indexOf(category) === -1) {
-                                        categories.push(category)
+                                    // If the category wasn't present before, add it
+                                    if (categories[category] === undefined) {
+                                        categories[category] = 1
+                                    }
+                                    // If it was present, increment its count
+                                    else {
+                                        categories[category]++
                                     }
                                 })
                             })
@@ -112,7 +117,7 @@
                                 // Store games and categories in local storage if all are loaded in
                                 if (i === game_count) {
                                     sessionStorage.games = JSON.stringify(data.games);
-                                    sessionStorage.categories = JSON.stringify(categories.sort());
+                                    sessionStorage.categories = JSON.stringify(categories);
                                     console.log("Games Stored!")
                                 }
                                 // Increment game counter
