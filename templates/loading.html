@@ -48,6 +48,10 @@
                     if (profile.communityvisibilitystate !== 3) {
                         private_id();
                     }
+                    // Otherwise, store the profile information
+                    else {
+                        sessionStorage.profile = JSON.stringify(profile)
+                    }
                 })
                 // If the request failed, inform the user
                 .fail(function() {
@@ -65,7 +69,7 @@
                     data = data.responseJSON;
 
                     // Store game count in browser's local storage
-                    localStorage.game_count = data.game_count;
+                    sessionStorage.game_count = data.game_count;
 
                     // Initialize counter variable and record total count
                     var i = 1;
@@ -97,7 +101,7 @@
 
                                 // Store games in local storage if all are loaded in
                                 if (i === game_count) {
-                                    localStorage.games = JSON.stringify(data.games);
+                                    sessionStorage.games = JSON.stringify(data.games);
                                     console.log("Games Stored!")
                                 }
                                 // Increment game counter
