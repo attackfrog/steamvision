@@ -42,7 +42,7 @@ def get_user_games(user_id):
 
     # If it didn't work, return an error value (HTTP "No Content")
     except:
-        return NO_CONTENT
+        return "", NO_CONTENT
 
     return jsonify(api_info["response"])
 
@@ -60,7 +60,7 @@ def get_user_profile(user_id):
 
     # If it didn't work, return an error value (HTTP "No Content")
     if len(api_info["response"]["players"]) == 0:
-        return NO_CONTENT
+        return "", NO_CONTENT
 
     return jsonify(api_info["response"]["players"][0])
 
