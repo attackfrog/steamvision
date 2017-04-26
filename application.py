@@ -1,6 +1,8 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, g
 from flask_jsglue import JSGlue
+from http.client import NO_CONTENT
+
 
 from helpers import get_user_games, get_user_profile, get_game_info
 
@@ -36,7 +38,7 @@ def user_games():
     # Make sure an id was provided
     if not request.args.get("id"):
         # If wasn't, return an error value (HTTP "No Content")
-        return ('', 204)
+        return NO_CONTENT
 
     return get_user_games(request.args.get("id"))
 
@@ -52,7 +54,7 @@ def user_profile():
     # Make sure an id was provided
     if not request.args.get("id"):
         # If wasn't, return an error value (HTTP "No Content")
-        return ('', 204)
+        return NO_CONTENT
 
     return get_user_profile(request.args.get("id"))
 

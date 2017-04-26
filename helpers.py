@@ -2,8 +2,9 @@ import os
 import datetime
 
 import urllib.request, urllib.parse
+from http.client import NO_CONTENT
 import json
-from flask import jsonify, render_template, g
+from flask import jsonify, g
 import psycopg2
 import lxml
 from bs4 import BeautifulSoup
@@ -41,7 +42,7 @@ def get_user_games(user_id):
 
     # If it didn't work, return an error value (HTTP "No Content")
     except:
-        return ('', 204)
+        return NO_CONTENT
 
     return jsonify(api_info["response"])
 
@@ -53,14 +54,13 @@ def get_user_profile(user_id):
     steam_id = guess_steam_id(user_id)
 
     # Try accessing user's profile information
-    try:
-        api_info = json.load(urllib.request.urlopen(
-            "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}"
-            .format(os.environ.get("API_KEY"), steam_id)))
+    api_info = json.load(urllib.request.urlopen(
+        "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={}&steamids={}"
+        .format(os.environ.get("API_KEY"), steam_id)))
 
     # If it didn't work, return an error value (HTTP "No Content")
-    except:
-        return ('', 204)
+    if len(api_info["response"]["players"] == 0):
+        return NO_CONTENT
 
     return jsonify(api_info["response"]["players"][0])
 
