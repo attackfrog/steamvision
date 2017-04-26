@@ -40,17 +40,22 @@
                 .done(function() {
                     // Check whether "No Content" was returned and return error if it was
                     if (profile.status === 204) {
+                        alert("A");
                         invalid_id()
                     }
                     profile = profile.responseJSON;
 
                     // If it's private, inform the user
                     if (profile.communityvisibilitystate !== 3) {
+                        alert("B");
                         private_id();
                     }
                 })
                 // If the request failed, inform the user
-                .fail(invalid_id());
+                .fail(function() {
+                    alert("C");
+                    invalid_id()
+                });
 
             // Get user games from server
             url = '{{ url_for("user_games") }}?id={{ id }}';
@@ -58,6 +63,7 @@
                 .done(function() {
                     // Check whether "No Content" was returned and return error if it was
                     if (data.status === 204) {
+                        alert("D");
                         invalid_id()
                     }
                     data = data.responseJSON;
@@ -104,7 +110,10 @@
                     });
                 })
                 // If for some reason getting user data fails, display the error page
-                .fail(invalid_id());
+                .fail(function() {
+                    alert("E");
+                    invalid_id()
+                });
         });
     </script>
 {% endblock %}
