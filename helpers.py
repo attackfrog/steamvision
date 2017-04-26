@@ -59,7 +59,7 @@ def get_user_profile(user_id):
         .format(os.environ.get("API_KEY"), steam_id)))
 
     # If it didn't work, return an error value (HTTP "No Content")
-    if len(api_info["response"]["players"] == 0):
+    if len(api_info["response"]["players"]) == 0:
         return NO_CONTENT
 
     return jsonify(api_info["response"]["players"][0])
