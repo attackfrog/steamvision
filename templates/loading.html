@@ -23,29 +23,43 @@
 
 {% block scripts %}
     <script>
+        // Define error functions
+        function invalid_id() {
+            var message = 'That user ID is invalid.';
+            window.location = '{{ url_for("error") }}?e=' + message;
+        }
+        function private_id() {
+            var message = 'That profile is private, so SteamView can\'t scan it.';
+            window.location = '{{ url_for("error") }}?e=' + message;
+        }
+
         $(document).ready(function () {
             // Check if user's profile is private
             var url = '{{ url_for("user_profile") }}?id={{ id }}';
             var profile = $.getJSON(url)
                 .done(function() {
+                    // Check whether "No Content" was returned and return error if it was
+                    if (profile.status === 204) {
+                        invalid_id()
+                    }
                     profile = profile.responseJSON;
 
                     // If it's private, inform the user
-                    if (profile.communityvisibilitystate != 3) {
-                        var message = 'That profile is private, so SteamView can\'t scan it.'
-                        window.location = '{{ url_for("error") }}?e=' + message;
+                    if (profile.communityvisibilitystate !== 3) {
+                        private_id();
                     }
                 })
                 // If the request failed, inform the user
-                .fail(function() {
-                    var message = 'That user ID is invalid.'
-                    window.location = '{{ url_for("error") }}?e=' + message;
-                })
+                .fail(invalid_id());
 
             // Get user games from server
             url = '{{ url_for("user_games") }}?id={{ id }}';
             var data = $.getJSON(url)
                 .done(function() {
+                    // Check whether "No Content" was returned and return error if it was
+                    if (data.status === 204) {
+                        invalid_id()
+                    }
                     data = data.responseJSON;
 
                     // Store game count in browser's local storage
@@ -80,20 +94,17 @@
                                 load_bar.attr("aria-valuenow", percent);
 
                                 // Store games in local storage if all are loaded in
-                                if (i == game_count) {
+                                if (i === game_count) {
                                     localStorage.games = JSON.stringify(data.games);
                                     console.log("Games Stored!")
                                 }
                                 // Increment game counter
                                 i++;
-                            })
-                    })
+                            });
+                    });
                 })
                 // If for some reason getting user data fails, display the error page
-                .fail(function() {
-                    var message = 'That user ID is invalid.'
-                    window.location = '{{ url_for("error") }}?e=' + message;
-                })
+                .fail(invalid_id());
         });
     </script>
 {% endblock %}
