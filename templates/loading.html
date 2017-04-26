@@ -58,6 +58,9 @@
                     invalid_id()
                 });
 
+            // Create array to store categories
+            var categories = [];
+
             // Get user games from server
             url = '{{ url_for("user_games") }}?id={{ id }}';
             var data = $.getJSON(url)
@@ -86,6 +89,13 @@
                                 game.categories = extra.categories;
                                 game.description = extra.description;
                                 game.ratings = extra.ratings;
+
+                                // Add new categories to the categories list
+                                extra.categories.forEach(function(category) {
+                                    if (categories.indexOf(category) === -1) {
+                                        categories.push(category)
+                                    }
+                                })
                             })
                             // Record failures to console
                             .fail(function() {
@@ -99,9 +109,10 @@
                                 load_bar.css('width', percent + '%');
                                 load_bar.attr("aria-valuenow", percent);
 
-                                // Store games in local storage if all are loaded in
+                                // Store games and categories in local storage if all are loaded in
                                 if (i === game_count) {
                                     sessionStorage.games = JSON.stringify(data.games);
+                                    sessionStorage.categories = JSON.stringify(categories.sort());
                                     console.log("Games Stored!")
                                 }
                                 // Increment game counter
