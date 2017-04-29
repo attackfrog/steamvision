@@ -13,7 +13,7 @@ $(document).ready(function () {
     var account_created = new Date(profile.timecreated * 1000); // convert to milliseconds from seconds
 
     // Add user information to nav bar
-    profile_html = '<ul class="nav navbar-nav navbar-right">' +
+    var profile_html = '<ul class="nav navbar-nav navbar-right">' +
         '<li>' +
             '<img class="pull-left" style="padding-top: 9px" src="' + profile.avatar + '" />' + // insert avatar here
         '</li>' +
@@ -27,5 +27,5 @@ $(document).ready(function () {
             '</ul>' +
         '</li>' +
         '</ul>';
-    $('#navs').append()
+    $('#navs').append(profile_html);
 });
