@@ -28,4 +28,13 @@ $(document).ready(function () {
         '</li>' +
         '</ul>';
     $('#navs').append(profile_html);
+
+    // Add categories to categories list
+    for (var category in categories) {
+        var category_html = '<a href="#" class="list-group-item">' +
+            '<span class="badge">' + categories[category] + '</span>' + // insert # of games this category fits
+                category + // insert category name
+            '</a>';
+        $('#categories').append(category_html);
+    }
 });
