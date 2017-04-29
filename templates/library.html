@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block title %}: Library View{% endblock %}
+
+
+{% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Categories</h2>
+                <hr>
+                <form>
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" placeholder="Search categories"
+                               aria-describedby="category-search">
+                    </div>
+                </form>
+                <br>
+                <div class="list-group" id="categories">
+                    <!-- Categories should go here -->
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <h2>Games</h2>
+                <hr>
+                <form>
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control" placeholder="Search games"
+                               aria-describedby="category-search">
+                    </div>
+                </form>
+                <br>
+                <!-- Games should go here -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <!-- Render page from sessionStorage data -->
+    <script src="/static/renderlibrary.js"></script>
+
+    <!-- Consider http://tablesorter.com/docs/ (It should be in the <head> though...) -->
+
+    <!-- https://kilianvalkhof.com/2010/javascript/how-to-build-a-fast-simple-list-filter-with-jquery/ -->
+    <!-- <script src="/static/listfilter.js"></script> -->
+{% endblock %}

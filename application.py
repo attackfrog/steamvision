@@ -70,6 +70,13 @@ def game():
     return get_game_info(request.args.get("appid"))
 
 
+@app.route("/library")
+def library():
+    """Displays user's game library."""
+
+    return render_template("library.html")
+
+
 @app.route("/error")
 def error():
     """Displays an error page with optional error message."""
