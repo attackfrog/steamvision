@@ -104,10 +104,12 @@ def get_game_info(appid):
     connection = get_db()
     cursor = connection.cursor()
 
-    # Check if game is in database & if it's there and the data is <30 days old, return that information
+    # Query database for game
     cursor.execute("SELECT * FROM games WHERE appid=%(appid)s", {"appid": appid})
     row = cursor.fetchone()
-    if row is not None and row[8] + datetime.timedelta(30) > datetime.datetime.now():
+
+    # If it's there and the data is <7 days old, return that information
+    if row is not None and row[8] + datetime.timedelta(7) > datetime.datetime.now():
 
         # Close cursor
         cursor.close()
@@ -129,14 +131,20 @@ def get_game_info(appid):
     soup = BeautifulSoup(page, "lxml")
 
     # Check if we got the Store homepage: if we did the game is missing for some reason
-    if not soup.title.contents[0].endswith("on Steam"):
-        categories = ["Missing?"]
+    if not soup.title.string.endswith("on Steam"):
+        categories = ["(Missing)"]
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
         description = "This game seems to have vanished from the Steam Store."
 
-    # See if it the appid is hidden behind an age check gate & return dummy data (but real description) if it is
+    # If the page is hidden behind an age check gate (enter birthday type) return description but dummy data for others
     elif "agecheck" in soup.body["class"]:
-        categories = ["Age Check"]
+        categories = ["(Age Check)"]
+        ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
+        description = get_description(soup)
+
+    # If the page is behind the other type of age gate (continue/cancel) return description, categories & dummy ratings
+    elif soup.find(id="app_agegate") is not None:
+        categories = get_categories(soup)
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
         description = get_description(soup)
 
@@ -183,22 +191,17 @@ def get_categories(soup):
         # If not, this may be an age check page that displays categories
         div = soup.find(class_="agegate_tags")
         if div is None:
-            raise RuntimeError("The Steam Store layout changed! Missing \"glance_tags\" and \"agegate_tags\", (page title: {})"
+            raise RuntimeError("The Steam Store layout changed! "
+                               "Missing \"glance_tags\" and \"agegate_tags\", (page title: {})"
                                .format(soup.title.contents[0]))
-    tag_type = type(div)
 
     # Create list
     categories = []
 
     # Extract categories from <div> into list:
-    for item in div.contents:
-        # Ignore the outer items that aren't inner tags
-        if type(item) == tag_type:
-            # Get the contents of the tag and strip white space
-            category = item.contents[0].strip()
-            # If it's not the "add a category" button, append to categories list
-            if not category == "+":
-                categories.append(category)
+    tags = div.find_all("a")
+    for tag in tags:
+        categories.append(tag.string.strip())
 
     return categories
 
@@ -208,14 +211,9 @@ def get_ratings(soup):
 
     # Get appropriate <div>s and check that they exist
     divs = soup.find_all(class_="game_review_summary")
-    if divs is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"game_review_summary\", (page title: {})"
-                           .format(soup.title.contents[0]))
 
-    # Create list
+    # Create list and define blank ratings item
     info = []
-
-    # Define blank item
     blank = {
         "summary": "",
         "details": ""
@@ -224,17 +222,27 @@ def get_ratings(soup):
     # Extract summary (eg. "Mixed") and detailed info (eg. "55% of 18 user reviews...") from divs
     for div in divs:
 
-        # Ignore divs that don't have these characteristics
         try:
-            # Also ignore the div if it is at the bottom, by the reviews section
-            if not div.find_next()["class"][0] == "loading_more_reviews":
+            # Ignore the div if it is at the bottom, by the reviews section
+            if "loading_more_reviews" not in div.find_next()["class"]:
 
+                # Get summary info from div and details from its companion, if it exists
+                summary = div.string
+                try:
+                    # For the details, strip the whitespace and "- " from its content
+                    details = div.find_next_sibling(class_="responsive_reviewdesc").string.strip()[2:]
+                # If it doesn't exist, skip this div
+                except AttributeError:
+                    continue
+
+                # Append the info to the info list
                 info.append({
-                    "summary": div.contents[0],
-                    "details": div["data-store-tooltip"]
+                    "summary": summary,
+                    "details": details
                 })
-        except:
-            pass
+        # If the next div doesn't have a class, skip this div
+        except KeyError:
+            continue
 
     # If just one set was found, it's probably overall reviews, so insert a blank entry for recent
     if len(info) == 1:
@@ -245,27 +253,10 @@ def get_ratings(soup):
             info.pop()
             info.append(blank)
 
-    # If none of them had those characteristics, it's because the page is missing either recent reviews or any reviews
+    # If no sets were found, insert blank values for both
     elif len(info) == 0:
-
-        # Get the detailed info from this div instead
-        div = soup.find_all(class_="responsive_reviewdesc")
-        if div is None:
-            raise RuntimeError("The Steam Store layout changed! Missing \"responsive_reviewdesc\", (page title: {})"
-                               .format(soup.title.contents[0]))
-
-        # If even that didn't find anything, there are no reviews for this item
-        elif len(div) == 0:
-            info.append(blank)
-            info.append(blank)
-
-        # If it did find something, we're just missing recent reviews
-        else:
-            info.append(blank)
-            info.append({
-                "summary": divs[0].contents[0],
-                "details": div[0].contents[0].strip()[2:]   # Slice to get rid of the "- "
-            })
+        info.append(blank)
+        info.append(blank)
 
     return info
 
