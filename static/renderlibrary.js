@@ -65,7 +65,7 @@ $(document).ready(function () {
                                     '<br>';
 
         // Loop through and add game's categories
-        for (var i = 0, length = length(game.categories); i < length; i++) {
+        for (var i = 0, length = game.categories.length; i < length; i++) {
             game_html +=            '<span class="label label-default">' + game.categories[i] + '</span>'
         }
         // Continue with html formatting
