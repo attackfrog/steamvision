@@ -92,13 +92,13 @@
 
                                 // Add new categories to the categories object
                                 extra.categories.forEach(function(category) {
-                                    // If the category wasn't present before, add it
-                                    if (categories[category] === undefined) {
-                                        categories[category] = 1
-                                    }
-                                    // If it was present, increment its count
-                                    else {
+                                    // If the category is present, increment its count
+                                    if (categories.hasOwnProperty(category)) {
                                         categories[category]++
+                                    }
+                                    // If not, add it
+                                    else {
+                                        categories[category] = 1
                                     }
                                 })
                             })
