@@ -71,7 +71,7 @@ $(document).ready(function () {
         // Continue with html formatting
         game_html +=            '</div>' +
                                 '<div class="col-md-8">' +
-                                    '<p>' + games[i].description + '</p>';
+                                    '<p>' + games[i].description + '</p> ';
 
         // Add recent ratings if they exist
         if (games[i].ratings[0].summary !== '') {
@@ -88,15 +88,15 @@ $(document).ready(function () {
                             '<div class="row">' +
                                 '<div class="col-md-12" style="text-align: right">' +
                                     // Insert game's appid into links
-                                    '<a class="btn btn-primary" href="http://store.steampowered.com/app/' + games[i].appid + '/" target="_blank">Store Page</a>' +
-                                    '<a class="btn btn-default" href="http://steamcommunity.com/app/' + games[i].appid + '" target="_blank">Community Hub</a>' +
+                                    '<a class="btn btn-primary" href="http://store.steampowered.com/app/' + games[i].appid + '/" target="_blank">Store Page</a> ' +
+                                    '<a class="btn btn-default" href="http://steamcommunity.com/app/' + games[i].appid + '" target="_blank">Community Hub</a> ' +
                                     '<a class="btn btn-success" href="steam://run/' + games[i].appid + '">Launch Game</a>' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
-            '</div>';
+            '</div> ';
 
         // Add game to page
         $('#games').append(game_html);
