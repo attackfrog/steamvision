@@ -97,5 +97,8 @@ $(document).ready(function () {
                     '</div>' +
                 '</div>' +
             '</div>';
+
+        // Add game to page
+        $('#games').append(game_html);
     }
 });
