@@ -31,10 +31,71 @@ $(document).ready(function () {
 
     // Add categories to categories list
     for (var category in categories) {
-        var category_html = '<a href="#" class="list-group-item">' +
-            '<span class="badge">' + categories[category] + '</span>' + // insert # of games this category fits
-                category + // insert category name
-            '</a>';
-        $('#categories').append(category_html);
+        // Skip the blank category
+        if (category !== '') {
+            var category_html = '<a href="#" class="list-group-item">' +
+                '<span class="badge">' + categories[category] + '</span>' + // insert # of games this category fits
+                    category + // insert category name
+                '</a>';
+            $('#categories').append(category_html);
+        }
+    }
+
+    // Add games to games list
+    for (var game in games) {
+        var game_html = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">' +
+                '<div class="panel panel-default">' +
+                    // Header:
+                    '<div class="panel-heading" role="tab" id="game' + game.appid + '">' + // id div with game's appid
+                        '<h4 class="panel-title">' +
+                            '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse' + game.appid + '"' + // set collapse toggle ids
+                              ' aria-expanded="false" aria-controls="collapse' + game.appid + '">' + // set collapse toggle ids
+                                game.name + // insert game's name
+                            '</a>' +
+                        '</h4>' +
+                    '</div>' +
+                    // Body:
+                    '<div id="collapse' + game.appid + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="game'+ game.appid + '">' + // set body's collapse ids
+                        '<div class="panel-body">' +
+                            '<div class="row">' +
+                                '<div class="col-md-4">' +
+                                    // Game logo image
+                                    '<img class="img-responsive" style="margin: auto" ' +
+                                         'src="http://media.steampowered.com/steamcommunity/public/images/apps/' + game.appid + '/' + game.img_logo_url + '.jpg" />' +
+                                    '<br>';
+
+        // Loop through and add game's categories
+        for (var i = 0, length = length(game.categories); i < length; i++) {
+            game_html +=            '<span class="label label-default">' + game.categories[i] + '</span>'
+        }
+        // Continue with html formatting
+        game_html +=            '</div>' +
+                                '<div class="col-md-8">' +
+                                    '<p>' + game.description + '</p>';
+
+        // Add recent ratings if they exist
+        if (game.ratings[0].summary !== '') {
+            game_html +=            '<p><strong>Recent Reviews: </strong>' + game.ratings[0].summary + ' (' + game.ratings[0].details + ')</p>'
+        }
+        // Add overall ratings if they exist
+        if (game.ratings[1].summary !== '') {
+            game_html +=            '<p><strong>Overall Reviews: </strong>' + game.ratings[1].summary + ' (' + game.ratings[1].details + ')</p>'
+        }
+
+        // Continue with HTML formatting
+        game_html +=            '</div>' +
+                            '</div>' +
+                            '<div class="row">' +
+                                '<div class="col-md-12" style="text-align: right">' +
+                                    // Insert game's appid into links
+                                    '<a class="btn btn-primary" href="http://store.steampowered.com/app/' + game.appid + '/" target="_blank">Store Page</a>' +
+                                    '<a class="btn btn-default" href="http://steamcommunity.com/app/' + game.appid + '" target="_blank">Community Hub</a>' +
+                                    '<a class="btn btn-success" href="steam://run/' + game.appid + '">Launch Game</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
     }
 });
