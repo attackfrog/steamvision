@@ -74,11 +74,11 @@ $(document).ready(function () {
                                     '<p>' + games[i].description + '</p>';
 
         // Add recent ratings if they exist
-        if (game.ratings[0].summary !== '') {
+        if (games[i].ratings[0].summary !== '') {
             game_html +=            '<p><strong>Recent Reviews: </strong>' + games[i].ratings[0].summary + ' (' + games[i].ratings[0].details + ')</p>'
         }
         // Add overall ratings if they exist
-        if (game.ratings[1].summary !== '') {
+        if (games[i].ratings[1].summary !== '') {
             game_html +=            '<p><strong>Overall Reviews: </strong>' + games[i].ratings[1].summary + ' (' + games[i].ratings[1].details + ')</p>'
         }
 
