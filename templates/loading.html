@@ -118,7 +118,8 @@
                                 if (i === game_count) {
                                     sessionStorage.games = JSON.stringify(data.games);
                                     sessionStorage.categories = JSON.stringify(categories);
-                                    console.log("Games Stored!")
+                                    // Go to library page
+                                    window.location = '{{ url_for("library") }}';
                                 }
                                 // Increment game counter
                                 i++;
