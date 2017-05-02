@@ -7,7 +7,7 @@
 (function ($) {
     // Filter games by category
     function filter_games(category) {
-        $(category).onclick(function () {
+        $(category).click(function () {
             // Get the category's name, removing the count from the string
             var name = $(this).text;
             name.slice(name.indexOf(' ') + 1);
