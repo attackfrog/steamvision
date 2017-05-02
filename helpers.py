@@ -13,9 +13,11 @@ from bs4 import BeautifulSoup
 def get_db():
     """Returns a database connection, connecting to the database if necessary."""
 
+    # Get connection from global storage, if it exists
     db = getattr(g, '_database', None)
+
+    # If it doesn't, connect to the database and store the connection in global storage
     if db is None:
-        # Connect to database
         urllib.parse.uses_netloc.append("postgres")
         url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
         db = g._database = psycopg2.connect(
@@ -25,6 +27,7 @@ def get_db():
             host=url.hostname,
             port=url.port
         )
+    # Return the database connection
     return db
 
 
