@@ -12,8 +12,7 @@
                 <hr>
                 <form>
                     <div class="input-group col-md-12">
-                        <input type="text" class="form-control" placeholder="Search categories"
-                               aria-describedby="category-search">
+                        <input type="text" class="form-control" placeholder="Search categories" id="category-search">
                     </div>
                 </form>
                 <br>
@@ -27,8 +26,7 @@
                 <hr>
                 <form>
                     <div class="input-group col-md-12">
-                        <input type="text" class="form-control" placeholder="Search games"
-                               aria-describedby="category-search">
+                        <input type="text" class="form-control" placeholder="Search games" id="game-search">
                     </div>
                 </form>
                 <br>
@@ -45,8 +43,8 @@
     <!-- Render page from sessionStorage data -->
     <script src="/static/renderlibrary.js"></script>
 
-    <!-- Consider http://tablesorter.com/docs/ (It should be in the <head> though...) -->
+    <!-- Categories and games list search filter functions -->
+    <script src="/static/searchlists.js"></script>
 
-    <!-- https://kilianvalkhof.com/2010/javascript/how-to-build-a-fast-simple-list-filter-with-jquery/ -->
-    <!-- <script src="/static/listfilter.js"></script> -->
+    <!-- Consider http://tablesorter.com/docs/ (It should be in the <head> though...) -->
 {% endblock %}
