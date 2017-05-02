@@ -9,7 +9,7 @@
     function filter_games(category) {
         $(category).click(function () {
             // Get the category's name, removing the count from the string
-            var name = $(this).text;
+            var name = $(this).text();
             name.slice(name.indexOf(' ') + 1);
 
             // If the category is active, deactivate it and show all games
