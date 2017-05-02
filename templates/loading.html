@@ -24,11 +24,11 @@
 {% block scripts %}
     <script>
         // Define error functions
-        function invalid_id() {
+        function invalid_id () {
             var message = 'That user ID is invalid.';
             window.location = '{{ url_for("error") }}?e=' + message;
         }
-        function private_id() {
+        function private_id () {
             var message = 'That profile is private, so SteamView can\'t scan it.';
             window.location = '{{ url_for("error") }}?e=' + message;
         }
@@ -37,7 +37,7 @@
             // Check if user's profile is private
             var url = '{{ url_for("user_profile") }}?id={{ id }}';
             var profile = $.getJSON(url)
-                .done(function() {
+                .done(function () {
                     // Check whether "No Content" was returned and return error if it was
                     if (profile.status === 204) {
                         invalid_id()
@@ -54,7 +54,7 @@
                     }
                 })
                 // If the request failed, inform the user
-                .fail(function() {
+                .fail(function () {
                     invalid_id()
                 });
 
@@ -64,7 +64,7 @@
             // Get user games from server
             url = '{{ url_for("user_games") }}?id={{ id }}';
             var data = $.getJSON(url)
-                .done(function() {
+                .done(function () {
                     // Check whether "No Content" was returned and return error if it was
                     if (data.status === 204) {
                         invalid_id()
@@ -79,11 +79,11 @@
                     var game_count = Number(data.game_count);
 
                     // Iterate through games, adding info to each
-                    data.games.forEach(function(game) {
+                    data.games.forEach(function (game) {
                         // Get extra game info from server
                         var game_url = '{{ url_for("game") }}?appid=' + game.appid;
-                        var extra = $.getJSON(game_url, function() {})
-                            .done(function() {
+                        var extra = $.getJSON(game_url, function () {})
+                            .done(function () {
                                 // Add the extra info to game's object
                                 extra = extra.responseJSON;
                                 game.categories = extra.categories;
@@ -91,7 +91,7 @@
                                 game.ratings = extra.ratings;
 
                                 // Add new categories to the categories object
-                                extra.categories.forEach(function(category) {
+                                extra.categories.forEach(function (category) {
                                     // If the category is present, increment its count
                                     if (categories.hasOwnProperty(category)) {
                                         categories[category]++
@@ -103,10 +103,10 @@
                                 })
                             })
                             // Record failures to console
-                            .fail(function() {
+                            .fail(function () {
                                 console.log('Failed to get info for appid:' + game.appid);
                             })
-                            .always(function() {
+                            .always(function () {
                                 // Update loading bar text and width
                                 var percent = (i/game_count*100).toFixed();
                                 $("#game_name").text(game.name + ' (' + i + '/' + game_count + ')');
@@ -127,7 +127,7 @@
                     });
                 })
                 // If for some reason getting user data fails, display the error page
-                .fail(function() {
+                .fail(function () {
                     invalid_id()
                 });
         });
