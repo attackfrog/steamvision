@@ -34,7 +34,7 @@ $(document).ready(function () {
         // Skip the blank category
         if (category !== '') {
             var category_html = '<a href="#" class="list-group-item">' +
-                '<span class="badge">' + categories[category] + '</span>' + // insert # of games this category fits
+                '<span class="badge">' + categories[category] + '</span> ' + // insert # of games this category fits
                     category + // insert category name
                 '</a>';
             $('#categories').append(category_html);
