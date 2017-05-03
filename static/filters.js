@@ -11,7 +11,7 @@
             $(this).click(function() {
                 // Get the category's name, removing the count from the string
                 var name = this.innerText;
-                name.slice(name.indexOf(' ') + 1);
+                name = name.slice(name.indexOf(' ') + 1);
 
                 // If the category is active, deactivate it and show all games
                 if ($(this).hasClass('active')) {
