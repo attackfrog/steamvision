@@ -21,7 +21,7 @@ $(document).ready(function () {
             '<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">' +
                 profile.personaname + ' (' + profile.realname + ')<span class="caret"></span></a>' + // insert names here
             '<ul class="dropdown-menu">' +
-                '<li class="dropdown-header">Account since' +
+                '<li class="dropdown-header">Account since ' +
                     account_created.toLocaleDateString() + '</li>' + // insert account creation date here
                 '<li><a href="' + profile.profileurl + '" target="_blank">Community Profile</a></li>' + // insert profile url here
             '</ul>' +
