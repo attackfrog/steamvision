@@ -10,7 +10,7 @@
         $(links).each(function () {
             $(this).click(function () {
                 // Get the category's name
-                var name = $(this).attr('id');
+                var name = this.innerText.slice(this.innerText.indexOf(' ') + 1);
 
                 // If category is active, deactivate it and delete it from the active categories object
                 if ($(this).hasClass('active')) {
