@@ -43,7 +43,7 @@
                 }
                 // If inactive, activate it and add it to the active categories object
                 else {
-                    $(this.addClass('active'));
+                    $(this).addClass('active');
                     window.active_categories[name] = 1;
                 }
 
