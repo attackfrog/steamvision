@@ -63,8 +63,8 @@
                     filtered_categories = Object.getOwnPropertyNames(filtered_categories);
 
                     // Hide all categories, then show only the ones in the array
-                    var category_links = $('#categories').children();
-                    category_links.hide();
+                    var category_links = $('#categories');
+                    category_links.children().hide();
                     for (var i = 0; i < filtered_categories.length; i++) {
                         category_links.find('a:contains(' + filtered_categories[i] + ')').show()
                     }
