@@ -34,12 +34,12 @@
                     for (var category in window.active_categories) {
                         // If the list is empty (as when this is the first category), add all that category's games
                         if (games.length === 0) {
-                            games = window.games_for_category_arrays[category]
+                            games = window.games_for_category[category]
                         }
                         // If the list is not empty, remove all games from it that don't match this category
                         else {
                             for (var i = 0; i < games.length; i++) {
-                                if (!window.games_for_category_sets[category].has(games[i])) {
+                                if (window.games_for_category[category].indexOf(games[i]) === -1) {
                                     games.splice(i, 1)
                                 }
                             }

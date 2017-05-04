@@ -15,23 +15,20 @@ $(document).ready(function () {
     // Store categories for each game in a window variable
     window.categories_for_game = {};
     for (var i = 0; i < games.length; i++) {
-        // Add this game's categories as an object property, in the form of a set (Internet Explorer <11 won't do this)
-        window.categories_for_game[games[i].appid] = new Set(games[i].categories)
+        // Add this game's categories as an object property in the form of an array
+        window.categories_for_game[games[i].appid] = games[i].categories
     }
     // Store games described by each category in a window variable
-    window.games_for_category_sets = {};
-    window.games_for_category_arrays = {};
+    window.games_for_category = {};
     for (var category in categories) {
         // Add a property for this category which will be a set of the games matching that category
-        window.games_for_category_sets[category] = new Set();
-        window.games_for_category_arrays[category] = [];
+        window.games_for_category[category] = [];
         // For each game,
         for (var game in window.categories_for_game) {
-            // If the category is in that game's set,
-            if (window.categories_for_game[game].has(category)) {
-                // Add it to this category's set
-                window.games_for_category_sets[category].add(game);
-                window.games_for_category_arrays[category].push(game);
+            // If the category is in that game's list,
+            if (window.categories_for_game[game].indexOf(category) !== -1) {
+                // Add it to this category's array
+                window.games_for_category[category].push(game);
             }
         }
     }
@@ -50,7 +47,7 @@ $(document).ready(function () {
     temp_categories = temp_categories.sort(function (a, b) {
         return a[0].localeCompare(b[0])
     });
-    // Convert the list back to an object
+    // Convert the list back to an object, the properties of which will now be alphabetically sorted
     categories = {};
     for (var i = 0; i < temp_categories.length; i++) {
         categories[temp_categories[i][0]] = temp_categories[i][1]
