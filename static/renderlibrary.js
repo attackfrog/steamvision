@@ -12,6 +12,47 @@ $(document).ready(function () {
     var categories = JSON.parse(sessionStorage.categories);
     var account_created = new Date(profile.timecreated * 1000); // convert to milliseconds from seconds
 
+    // Store categories for each game in a window variable
+    window.categories_for_game = new Object();
+    for (var i = 0; i < games.length; i++) {
+        // Add this game's categories as an object property, in the form of a set (Internet Explorer <11 won't do this)
+        window.categories_for_game[games[i].appid] = new Set(games[i].categories)
+    }
+    // Store games described by each category in a window variable
+    window.games_for_category = new Object();
+    for (var category in categories) {
+        // Add a property for this category which will be a set of the games matching that category
+        window.games_for_category[category] = new Set();
+        // For each game,
+        for (var game in window.categories_for_game) {
+            // If the category is in that game's set,
+            if (window.categories_for_game[game].has(category)) {
+                // Add it to this category's set
+                window.games_for_category[category].add(game)
+            }
+        }
+    }
+
+    // Sort games alphabetically by name
+    games = games.sort(function (a, b) {
+        return a.name.localeCompare(b.name)
+    });
+
+    // Convert the categories object to a list,
+    var temp_categories = [];
+    for (var category in categories) {
+        temp_categories.push([category, categories[category]]);
+    }
+    // Sort that list alphabetically by category name
+    temp_categories = temp_categories.sort(function (a, b) {
+        return a[0].localeCompare(b[0])
+    });
+    // Convert the list back to an object
+    categories = {};
+    for (var i = 0; i < temp_categories.length; i++) {
+        categories[temp_categories[i][0]] = temp_categories[i][1]
+    }
+
     // Add user information to nav bar
     var profile_html = '<ul class="nav navbar-nav navbar-right">' +
         '<li>' +
