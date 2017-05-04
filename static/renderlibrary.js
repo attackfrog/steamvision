@@ -13,22 +13,25 @@ $(document).ready(function () {
     var account_created = new Date(profile.timecreated * 1000); // convert to milliseconds from seconds
 
     // Store categories for each game in a window variable
-    window.categories_for_game = new Object();
+    window.categories_for_game = {};
     for (var i = 0; i < games.length; i++) {
         // Add this game's categories as an object property, in the form of a set (Internet Explorer <11 won't do this)
         window.categories_for_game[games[i].appid] = new Set(games[i].categories)
     }
     // Store games described by each category in a window variable
-    window.games_for_category = new Object();
+    window.games_for_category_sets = {};
+    window.games_for_category_arrays = {};
     for (var category in categories) {
         // Add a property for this category which will be a set of the games matching that category
-        window.games_for_category[category] = new Set();
+        window.games_for_category_sets[category] = new Set();
+        window.games_for_category_arrays[category] = [];
         // For each game,
         for (var game in window.categories_for_game) {
             // If the category is in that game's set,
             if (window.categories_for_game[game].has(category)) {
                 // Add it to this category's set
-                window.games_for_category[category].add(game)
+                window.games_for_category_sets[category].add(game);
+                window.games_for_category_arrays[category].push(game);
             }
         }
     }
@@ -74,7 +77,7 @@ $(document).ready(function () {
     for (var category in categories) {
         // Skip the blank category
         if (category !== '') {
-            var category_html = '<a href="#" class="list-group-item">' +
+            var category_html = '<a href="#" class="list-group-item" id="' + category + '">' +
                 '<span class="badge">' + categories[category] + '</span> ' + // insert # of games this category fits
                     category + // insert category name
                 '</a>';
@@ -84,9 +87,9 @@ $(document).ready(function () {
 
     // Add games to games list
     for (var i = 0, length = games.length; i < length; i++) {
-        var game_html = '<div class="panel panel-default">' +
+        var game_html = '<div class="panel panel-default" id="' + games[i].appid + '">' + // id panel with game's appid
                 // Header:
-                '<div class="panel-heading" role="tab" id="game' + games[i].appid + '">' + // id div with game's appid
+                '<div class="panel-heading" role="tab" id="game' + games[i].appid + '">' + // id panel header with game's appid
                     '<h4 class="panel-title">' +
                         '<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse' + games[i].appid + '"' + // set collapse toggle ids
                           ' aria-expanded="false" aria-controls="collapse' + games[i].appid + '">' + // set collapse toggle ids
