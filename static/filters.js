@@ -41,13 +41,13 @@
                             for (var i = 0; i < games.length; i++) {
                                 if (window.games_for_category[category].indexOf(games[i]) === -1) {
                                     games.splice(i, 1)
+                                    console.log(games);
                                 }
                             }
                         }
                     }
                     // Create object to hold categories which describe the games in the filtered list
                     var filtered_categories = {};
-                    console.log(games);
 
                     // Hide all games, then show only the ones in the filtered list
                     $('#accordion').children().hide();
