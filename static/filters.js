@@ -66,7 +66,7 @@
                     var category_links = $('#categories').children();
                     category_links.hide();
                     for (var i = 0; i < filtered_categories.length; i++) {
-                        category_links.find('contains:(' + filtered_categories[i] + ')').show()
+                        category_links.find('a:contains(' + filtered_categories[i] + ')').show()
                     }
                 }
             })
