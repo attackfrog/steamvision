@@ -5,30 +5,6 @@
  */
 
 (function ($) {
-    /**
-    // Filter games by category
-    function filter_games(categories) {
-        $(categories).each(function () {
-            $(this).click(function() {
-                // Get the category's name, removing the count from the string
-                var name = this.innerText.slice(this.innerText.indexOf(' ') + 1);
-
-                // If the category is active, deactivate it and show all games
-                if ($(this).hasClass('active')) {
-                    $(this).removeClass('active');
-                    $('#accordion').children().show();
-                }
-                // If the category is inactive, activate it and hide games that don't fit the category
-                else {
-                    $(this).addClass('active');
-                    var accordion = $('#accordion');
-                    accordion.children().hide();
-                    accordion.find('span:contains(' + name + ')').parents('.panel').show();
-                }
-            });
-        });
-    }
-     */
 
     function activate_links(links) {
         $(links).each(function () {
@@ -49,7 +25,8 @@
 
                 // If no categories are selected, show all games and categories
                 if (Object.entries(window.active_categories).length === 0) {
-                    $('#accordion').children().show()
+                    $('#accordion').children().show();
+                    $('#categories').children().show();
                 }
                 // Iterate through selected categories, creating a list of games described by all of them
                 else {
@@ -68,10 +45,26 @@
                             }
                         }
                     }
+                    // Create object to hold categories which describe the games in the filtered list
+                    var filtered_categories = {};
+
                     // Hide all games, then show only the ones in the filtered list
-                    $('#accordion').children().hide()
+                    $('#accordion').children().hide();
                     for (var i = 0; i < games.length; i++) {
-                        $('#' + games[i]).show()
+                        $('#' + games[i]).show();
+
+                        // Iterate through each of the categories held by this game and add them to the object
+                        for (var j = 0; j < window.categories_for_game[games[i]].length; j++) {
+                            filtered_categories[window.categories_for_game[games[i]][j]] = 1;
+                        }
+                    }
+                    // Convert object to array of category names
+                    filtered_categories = Object.getOwnPropertyNames(filtered_categories);
+
+                    // Hide all categories, then show only the ones in the array
+                    $('#categories').children().hide();
+                    for (var i = 0; i < filtered_categories.length; i++) {
+                        $('#' + filtered_categories[i]).show()
                     }
                 }
             })
