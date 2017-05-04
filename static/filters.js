@@ -47,6 +47,7 @@
                     }
                     // Create object to hold categories which describe the games in the filtered list
                     var filtered_categories = {};
+                    console.log(games);
 
                     // Hide all games, then show only the ones in the filtered list
                     $('#accordion').children().hide();
