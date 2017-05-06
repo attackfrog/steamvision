@@ -8,7 +8,7 @@
 
     function sort_categories(identifier, list, type, direction) {
         // When the element is clicked,
-        identifier.onclick(function () {
+        identifier.click(function () {
             // Create an array of the elements of the list
             var sort_list = list.children().toArray();
 
@@ -67,7 +67,7 @@
 
     function sort_games(identifier, list, type, direction) {
         // When the element is clicked,
-        identifier.onclick(function () {
+        identifier.click(function () {
             // Create an array of the elements of the list
             var sort_list = list.children().toArray();
 
