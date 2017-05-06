@@ -32,9 +32,10 @@
                 else {
                     var games = [];
                     for (var i = 0; i < window.active_categories.length; i++) {
-                        // If the list is empty (as when this is the first category), copy this category's games list
+                        // If the list is empty (as when this is the first category),
                         if (games.length === 0) {
-                            games = window.games_for_category[window.active_categories[i]]
+                            // Copy this category's games list
+                            games = window.games_for_category[window.active_categories[i]].slice()
                         }
                         // If the list is not empty,
                         else {
@@ -53,6 +54,7 @@
                     // Hide all games, then show only the ones in the filtered list
                     $('#accordion').children().hide();
                     for (var i = 0; i < games.length; i++) {
+                        // Identify the game by its id value
                         $('#' + games[i]).show();
 
                         // Iterate through each of the categories held by this game and add them to the list
