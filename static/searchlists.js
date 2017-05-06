@@ -67,9 +67,11 @@
                 var query = $(this).val();
                 // If user has entered a query,
                 if (query) {
-                    // Show games in the current filter, then hide ones that don't match the query
+                    // Show games in the current filter
                     show_filtered_games(list);
-                    $(list).find("a:not(:Contains(" + query + "))").parents('.panel').hide();
+                    // Search for links that are titles (role='button') which don't contain the query and hide their
+                    // parent div panel
+                    $(list).find("a[role='button']:not(:Contains(" + query + "))").parents('.panel').hide();
                 }
                 // If the search field is blank, show all games in the current filter
                 else {
