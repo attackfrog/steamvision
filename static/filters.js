@@ -1,7 +1,7 @@
 /**
  * Filters the games list by category.
  *
- * Created by Jack McLellan on 5/2/2017.
+ * Created by Jack McLellan on 5/6/2017.
  */
 
 (function ($) {
@@ -30,49 +30,47 @@
                 }
                 // Iterate through selected categories, creating a list of games described by all of them
                 else {
-                    var games = [];
+                    window.filtered_games = [];
                     for (var i = 0; i < window.active_categories.length; i++) {
                         // If the list is empty (as when this is the first category),
-                        if (games.length === 0) {
+                        if (window.filtered_games.length === 0) {
                             // Copy this category's games list
-                            games = window.games_for_category[window.active_categories[i]].slice()
+                            window.filtered_games = window.games_for_category[window.active_categories[i]].slice()
                         }
                         // If the list is not empty,
                         else {
-                            // Iterate through the list of games backwards (removing items will change the index of
-                            // following items)
-                            for (var j = games.length - 1; j >= 0; j--) {
+                            // Iterate through the list of games backwards (removing items will change the index of following items)
+                            for (var j = window.filtered_games.length - 1; j >= 0; j--) {
                                 // And remove each game that isn't in the current category's list
-                                if (window.games_for_category[window.active_categories[i]].indexOf(games[j]) === -1) {
-                                    games.splice(j, 1)
+                                if (window.games_for_category[window.active_categories[i]].indexOf(window.filtered_games[j]) === -1) {
+                                    window.filtered_games.splice(j, 1)
                                 }
                             }
                         }
                     }
                     // Create object to hold categories which describe the games in the filtered list
-                    var filtered_categories = [];
+                    window.filtered_categories = [];
 
                     // Hide all games, then show only the ones in the filtered list
                     $('#accordion').children().hide();
-                    for (var i = 0; i < games.length; i++) {
+                    for (var i = 0; i < window.filtered_games.length; i++) {
                         // Identify the game by its id value
-                        $('#' + games[i]).show();
+                        $('#' + window.filtered_games[i]).show();
 
                         // Iterate through each of the categories held by this game and add them to the list
-                        for (var j = 0; j < window.categories_for_game[games[i]].length; j++) {
+                        for (var j = 0; j < window.categories_for_game[window.filtered_games[i]].length; j++) {
                             // But don't add duplicates of categories already in the list
-                            if (filtered_categories.indexOf(window.categories_for_game[games[i]][j]) === -1) {
-                                filtered_categories.push(window.categories_for_game[games[i]][j])
+                            if (window.filtered_categories.indexOf(window.categories_for_game[window.filtered_games[i]][j]) === -1) {
+                                window.filtered_categories.push(window.categories_for_game[window.filtered_games[i]][j])
                             }
                         }
                     }
-
                     // Hide all categories, then show only the ones in the list
                     var category_links = $('#categories');
                     category_links.children().hide();
-                    for (var i = 0; i < filtered_categories.length; i++) {
+                    for (var i = 0; i < window.filtered_categories.length; i++) {
                         // Identify them by searching for the category's text
-                        category_links.find('a:contains(' + filtered_categories[i] + ')').show()
+                        category_links.find('a:contains(' + window.filtered_categories[i] + ')').show()
                     }
                 }
             })
