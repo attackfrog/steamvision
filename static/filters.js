@@ -41,31 +41,32 @@
                             for (var i = 0; i < games.length; i++) {
                                 if (window.games_for_category[category].indexOf(games[i]) === -1) {
                                     games.splice(i, 1)
-                                    console.log(games);
                                 }
                             }
                         }
                     }
                     // Create object to hold categories which describe the games in the filtered list
-                    var filtered_categories = {};
+                    var filtered_categories = [];
 
                     // Hide all games, then show only the ones in the filtered list
                     $('#accordion').children().hide();
                     for (var i = 0; i < games.length; i++) {
                         $('#' + games[i]).show();
 
-                        // Iterate through each of the categories held by this game and add them to the object
+                        // Iterate through each of the categories held by this game and add them to the list
                         for (var j = 0; j < window.categories_for_game[games[i]].length; j++) {
-                            filtered_categories[window.categories_for_game[games[i]][j]] = 1;
+                            // But don't add duplicates of categories already in the list
+                            if (filtered_categories.indexOf(window.categories_for_game[games[i]][j]) === -1) {
+                                filtered_categories.push(window.categories_for_game[games[i]][j])
+                            }
                         }
                     }
-                    // Convert object to array of category names
-                    filtered_categories = Object.getOwnPropertyNames(filtered_categories);
 
-                    // Hide all categories, then show only the ones in the array
+                    // Hide all categories, then show only the ones in the list
                     var category_links = $('#categories');
                     category_links.children().hide();
                     for (var i = 0; i < filtered_categories.length; i++) {
+                        // Identify them by searching for the category's text
                         category_links.find('a:contains(' + filtered_categories[i] + ')').show()
                     }
                 }
