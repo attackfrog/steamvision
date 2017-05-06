@@ -85,12 +85,18 @@
     }
 
     function show_filtered_games(list) {
-        // Hide all games
-        $(list).children().hide();
-        // Iterate through games in filtered list and show games in it
-        for (var i = 0; i < window.filtered_games.length; i++) {
-            // Identify the game by its id value
-            $('#' + window.filtered_games[i]).show();
+        // If there are no active categories, show all games
+        if (window.active_categories.length === 0) {
+            $(list).children().show()
+        }
+        else {
+            // Otherwise, hide all games
+            $(list).children().hide();
+            // Then iterate through games in filtered list and show games in it
+            for (var i = 0; i < window.filtered_games.length; i++) {
+                // Identify the game by its id value
+                $('#' + window.filtered_games[i]).show();
+            }
         }
     }
 
