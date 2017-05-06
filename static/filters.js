@@ -39,8 +39,9 @@
                         }
                         // If the list is not empty,
                         else {
-                            // Iterate through the list of games
-                            for (var j = 0; j < games.length; j++) {
+                            // Iterate through the list of games backwards (removing items will change the index of
+                            // following items)
+                            for (var j = games.length - 1; j >= 0; j--) {
                                 // And remove each game that isn't in the current category's list
                                 if (window.games_for_category[window.active_categories[i]].indexOf(games[j]) === -1) {
                                     games.splice(j, 1)
