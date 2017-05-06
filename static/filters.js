@@ -12,35 +12,37 @@
                 // Get the category's name
                 var name = this.innerText.slice(this.innerText.indexOf(' ') + 1);
 
-                // If category is active, deactivate it and delete it from the active categories object
+                // If category is active, deactivate it and remove it from the active categories list
                 if ($(this).hasClass('active')) {
                     $(this).removeClass('active');
-                    delete window.active_categories[name];
+                    window.active_categories.splice(window.active_categories.indexOf(name), 1);
                 }
                 // If inactive, activate it and add it to the active categories object
                 else {
                     $(this).addClass('active');
-                    window.active_categories[name] = 1;
+                    window.active_categories.push(name);
                 }
 
                 // If no categories are selected, show all games and categories
-                if (Object.entries(window.active_categories).length === 0) {
+                if (window.active_categories.length === 0) {
                     $('#accordion').children().show();
                     $('#categories').children().show();
                 }
                 // Iterate through selected categories, creating a list of games described by all of them
                 else {
                     var games = [];
-                    for (var category in window.active_categories) {
-                        // If the list is empty (as when this is the first category), add all that category's games
+                    for (var i = 0; i < window.active_categories.length; i++) {
+                        // If the list is empty (as when this is the first category), copy this category's games list
                         if (games.length === 0) {
-                            games = window.games_for_category[category]
+                            games = window.games_for_category[window.active_categories[i]]
                         }
-                        // If the list is not empty, remove all games from it that don't match this category
+                        // If the list is not empty,
                         else {
-                            for (var i = 0; i < games.length; i++) {
-                                if (window.games_for_category[category].indexOf(games[i]) === -1) {
-                                    games.splice(i, 1)
+                            // Iterate through the list of games
+                            for (var j = 0; j < games.length; j++) {
+                                // And remove each game that isn't in the current category's list
+                                if (window.games_for_category[window.active_categories[i]].indexOf(games[j]) === -1) {
+                                    games.splice(j, 1)
                                 }
                             }
                         }
@@ -76,7 +78,7 @@
 
     // Activate functionality when page has loaded
     $(function () {
-        window.active_categories = {};
+        window.active_categories = [];
         activate_links($('#categories').children())
     })
 }(jQuery));
