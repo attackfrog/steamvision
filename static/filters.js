@@ -48,7 +48,7 @@
                             }
                         }
                     }
-                    // Create object to hold categories which describe the games in the filtered list
+                    // Clear the filtered categories list
                     window.filtered_categories = [];
 
                     // Hide all games, then show only the ones in the filtered list
@@ -77,10 +77,30 @@
         })
     }
 
+    function activate_reset(button) {
+        button.click(function () {
+            // Remove all active categories from the list
+            window.active_categories = [];
+
+            //  Remove "active" class from all links
+            var categories = $('#categories');
+            categories.children().removeClass('active');
+
+            // Show all categories and games
+            categories.children().show();
+            $('#accordion').children().show();
+
+            // Clear search text fields
+            $('#category-search').val("");
+            $('#game-search').val("");
+        })
+    }
+
     // Activate functionality when page has loaded
     $(function () {
         window.active_categories = [];
         activate_links($('#categories').children());
+        activate_reset($('#reset-button'));
 
         // Make the function globally accessible so the sorting function can reactivate the category links
         window.activate_links = activate_links;

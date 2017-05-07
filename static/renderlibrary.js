@@ -33,6 +33,10 @@ $(document).ready(function () {
         }
     }
 
+    // Create objects to hold categories which describe the games in the filtered list and the filtered games
+    window.filtered_categories = [];
+    window.filtered_games = [];
+
     // Sort games alphabetically by name
     games = games.sort(function (a, b) {
         return a.name.localeCompare(b.name)
