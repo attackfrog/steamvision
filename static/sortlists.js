@@ -26,9 +26,10 @@
                     console.log(type + ' isn\'t a valid thing to sort by...');
             }
 
-            // Replace the old set of elements with the newly sorted set
+            // Replace the old set of elements with the newly sorted set and reactivate sorting functionality
             categories.empty();
             categories.append(sort_list);
+            window.activate_links(categories.children());
         })
     }
     

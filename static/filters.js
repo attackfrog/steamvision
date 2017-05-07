@@ -80,6 +80,9 @@
     // Activate functionality when page has loaded
     $(function () {
         window.active_categories = [];
-        activate_links($('#categories').children())
+        activate_links($('#categories').children());
+
+        // Make the function globally accessible so the sorting function can reactivate the category links
+        window.activate_links = activate_links();
     })
 }(jQuery));
