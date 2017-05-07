@@ -288,9 +288,10 @@ def get_release_date(soup):
     """Scrapes the release date from a Steam Store game page."""
 
     # Get the appropriate div and check that it exists
-    div = soup.find(class_="release_date").find("span", class_="date")
+    div = soup.find(class_="release_date")
     if div is None:
         # If there's no release date, just return (Unknown)
         return "(Unknown)"
 
-    return div.string
+    # Otherwise, return the date portion of the div (format: Aug. 21, 2012)
+    return div.find("span", class_="date").string
