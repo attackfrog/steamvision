@@ -126,12 +126,13 @@ $(document).ready(function () {
             game_html +=        '<p><strong>Overall Reviews: </strong>' + games[i].ratings[1].summary + ' (' + games[i].ratings[1].details + ')</p>'
         }
 
-        // Continue with HTML formatting
-        game_html +=        '</div>' +
+        // Add release date and continue with HTML formatting
+        game_html +=            '<p><strong>Release Date: </strong>' + games[i].release_date + '</p>' +
+                            '</div>' +
                         '</div>' +
                         '<div class="row">' +
                             '<div class="col-md-12" style="text-align: right">' +
-                                // Insert game's appid into links
+                                // Insert game's appid into links to Store page, community hub, and Steam client game launcher
                                 '<a class="btn btn-primary" href="http://store.steampowered.com/app/' + games[i].appid + '/" target="_blank">Store Page</a> ' +
                                 '<a class="btn btn-default" href="http://steamcommunity.com/app/' + games[i].appid + '" target="_blank">Community Hub</a> ' +
                                 '<a class="btn btn-success" href="steam://run/' + games[i].appid + '">Launch Game</a>' +
