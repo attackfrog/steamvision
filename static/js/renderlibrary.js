@@ -96,6 +96,17 @@ $(document).ready(function () {
                           ' aria-expanded="false" aria-controls="collapse' + games[i].appid + '">' + // set collapse toggle ids
                             games[i].name + // insert game's name
                         '</a>' +
+                        '<div class="pull-right sv-quickinfo">';
+        // If overall review summary exists, add that info to the title
+        if (games[i].ratings[1].summary !== '') {
+            game_html += games[i].ratings[1].summary + ' | '
+        }
+        // If release date is not unknown, add the year to the title (this assumes the date format ends with a 4-digit year)
+        if (games[i].release_date !== '(Unknown)') {
+            game_html += games[i].release_date.slice(-4)
+        }
+        // Continue with html formatting
+            game_html += '</div>' +
                     '</h4>' +
                 '</div>' +
                 // Body:
@@ -113,7 +124,7 @@ $(document).ready(function () {
             game_html +=        '<span class="label label-info">' + games[i].categories[j] + '</span> '
         }
         // Continue with html formatting
-        game_html +=        '</div>' +
+            game_html +=        '</div>' +
                             '<div class="col-md-8">' +
                                 '<p>' + games[i].description + '</p>';
 
@@ -127,7 +138,7 @@ $(document).ready(function () {
         }
 
         // Add release date and continue with HTML formatting
-        game_html +=            '<p><strong>Release Date: </strong>' + games[i].release_date + '</p>' +
+            game_html +=        '<p><strong>Release Date: </strong>' + games[i].release_date + '</p>' +
                             '</div>' +
                         '</div>' +
                         '<div class="row">' +
