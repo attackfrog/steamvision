@@ -102,7 +102,7 @@ $(document).ready(function () {
                 '<div id="collapse' + games[i].appid + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="game'+ games[i].appid + '">' + // set body's collapse ids
                     '<div class="panel-body">' +
                         '<div class="row">' +
-                            '<div class="col-md-4">' +
+                            '<div class="col-md-4" align="center">' +
                                 // Game logo image
                                 '<img class="img-responsive" style="margin: auto" ' +
                                      'src="http://media.steampowered.com/steamcommunity/public/images/apps/' + games[i].appid + '/' + games[i].img_logo_url + '.jpg" />' +
