@@ -124,14 +124,38 @@
     function sort_games_by_year(sort_list, direction) {
         if (direction === 'ascending') {
             return sort_list.sort(function (a, b) {
+                // Try to get the year from the quick info in the game's title
+                var year_a = Number($(a).find('.sv-quickinfo').text().slice(-4));
+                var year_b = Number($(b).find('.sv-quickinfo').text().slice(-4));
+
+                // If the year was missing, put in dummy value of 3000 so it's sorted last
+                if (isNaN(year_a)) {
+                    year_a = 3000;
+                }
+                if (isNaN(year_b)) {
+                    year_b = 3000;
+                }
+
                 // Sort the list by comparing the release year in the title
-                return Number($(a).find('.sv-quickinfo').text().slice(-4)) - Number($(b).find('.sv-quickinfo').text().slice(-4))
+                return year_a - year_b
             })
         }
         else if (direction === 'descending') {
             return sort_list.sort(function (a, b) {
-                // Sort the list in the same way, but inverted
-                return -(Number($(a).find('.sv-quickinfo').text().slice(-4)) - Number($(b).find('.sv-quickinfo').text().slice(-4)))
+                // Try to get the year from the quick info in the game's title
+                var year_a = Number($(a).find('.sv-quickinfo').text().slice(-4));
+                var year_b = Number($(b).find('.sv-quickinfo').text().slice(-4));
+
+                // If the year was missing, put in dummy value of 0 so it's sorted last
+                if (isNaN(year_a)) {
+                    year_a = 0;
+                }
+                if (isNaN(year_b)) {
+                    year_b = 0;
+                }
+
+                // Sort the list in the same way but inverted
+                return -(year_a - year_b)
             })
         }
         else {
@@ -140,23 +164,31 @@
     }
 
     function sort_games_by_rating(sort_list, direction) {
-        // Get the first game's quick info summary and remove the year to get the rating summary
-        var rating_a = $(a).find('.sv-quickinfo').text();
-        rating_a = rating_a.slice(0, rating_a.indexOf('|') - 1);
-
-        // Do the same for the second game
-        var rating_b = $(b).find('.sv-quickinfo').text();
-        rating_b = rating_b.slice(0, rating_b.indexOf('|') - 1);
-
         if (direction === 'ascending') {
             return sort_list.sort(function (a, b) {
+                // Get the first game's quick info summary and remove the year to get the rating summary
+                var rating_a = $(a).find('.sv-quickinfo').text();
+                rating_a = rating_a.slice(0, rating_a.indexOf('|') - 1);
+
+                // Do the same for the second game
+                var rating_b = $(b).find('.sv-quickinfo').text();
+                rating_b = rating_b.slice(0, rating_b.indexOf('|') - 1);
+
                 // Sort the list by comparing the release year in the title
                 return convert_rating_to_value(rating_a) - convert_rating_to_value(rating_b)
             })
         }
         else if (direction === 'descending') {
             return sort_list.sort(function (a, b) {
-                // Sort the list in the same way, but inverted
+                // Get the first game's quick info summary and remove the year to get the rating summary
+                var rating_a = $(a).find('.sv-quickinfo').text();
+                rating_a = rating_a.slice(0, rating_a.indexOf('|') - 1);
+
+                // Do the same for the second game
+                var rating_b = $(b).find('.sv-quickinfo').text();
+                rating_b = rating_b.slice(0, rating_b.indexOf('|') - 1);
+
+                // Sort the list in the same way as ascending but inverted
                 return -(convert_rating_to_value(rating_a) - convert_rating_to_value(rating_b))
             })
         }
