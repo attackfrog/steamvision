@@ -7,7 +7,7 @@
 (function ($) {
 
     function activate_links(links) {
-        $(links).each(function () {
+        links.each(function () {
             $(this).click(function () {
                 // Get the category's name
                 var name = this.innerText.slice(this.innerText.indexOf(' ') + 1);

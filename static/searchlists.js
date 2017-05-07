@@ -107,7 +107,7 @@
 
     // Activate the search fields when the page has loaded
     $(function () {
-        search_categories($('#categories'), $('#category-search'));
-        search_games($('#accordion'), $('#game-search'));
+        search_categories('#categories', '#category-search');
+        search_games('#accordion', '#game-search');
     })
 }(jQuery));
