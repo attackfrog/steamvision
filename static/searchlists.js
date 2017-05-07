@@ -50,9 +50,14 @@
     }
 
     function show_filtered_categories(list) {
-        // Hide all categories
+        // If there are no active categories, show all categories
+        if (window.active_categories.length === 0) {
+            $(list).children().show()
+        }
+
+        // Otherwise, hide all categories
         $(list).children().hide();
-        // Iterate through filtered categories list and show categories in it
+        // Then iterate through filtered categories list and show categories in it
         for (var i = 0; i < window.filtered_categories.length; i++) {
             // Identify the category by its text
             $(list).children('a:contains(' + window.filtered_categories[i] + ')').show();
