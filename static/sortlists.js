@@ -6,11 +6,13 @@
 
 (function ($) {
 
-    function sort_categories(identifier, list, type, direction) {
+    function sort_categories(identifier, type, direction) {
         // When the element is clicked,
         identifier.click(function () {
+            var categories = $('#categories');
+
             // Create an array of the elements of the list
-            var sort_list = list.children().toArray();
+            var sort_list = categories.children().toArray();
 
             // Sort using the specified method
             switch (type) {
@@ -25,7 +27,8 @@
             }
 
             // Replace the old set of elements with the newly sorted set
-            list.children().replaceWith(sort_list);
+            categories.empty();
+            categories.append(sort_list);
         })
     }
     
@@ -65,11 +68,13 @@
         }
     }
 
-    function sort_games(identifier, list, type, direction) {
+    function sort_games(identifier, type, direction) {
+        var games = $('#accordion');
+
         // When the element is clicked,
         identifier.click(function () {
             // Create an array of the elements of the list
-            var sort_list = list.children().toArray();
+            var sort_list = games.children().toArray();
 
             // Sort using the specified method
             switch (type) {
@@ -81,7 +86,8 @@
             }
 
             // Replace the old set of elements with the newly sorted set
-            list.children().replaceWith(sort_list);
+            games.empty();
+            games.append(sort_list);
         })
     }
 
@@ -106,16 +112,14 @@
     $(function () {
         var category_sort_buttons = $('[aria-label="category-sort"]');
         var game_sort_buttons = $('[aria-label="game-sort"]');
-        var categories = $('#categories');
-        var games = $('#accordion');
 
-        sort_categories(category_sort_buttons.children('.sv-sort-alpha-asc'), categories, 'name', 'ascending');
-        sort_categories(category_sort_buttons.children('.sv-sort-alpha-desc'), categories, 'name', 'descending');
-        sort_categories(category_sort_buttons.children('.sv-sort-count-asc'), categories, 'count', 'ascending');
-        sort_categories(category_sort_buttons.children('.sv-sort-count-desc'), categories, 'count', 'descending');
+        sort_categories(category_sort_buttons.children('.sv-sort-alpha-asc'), 'name', 'ascending');
+        sort_categories(category_sort_buttons.children('.sv-sort-alpha-desc'), 'name', 'descending');
+        sort_categories(category_sort_buttons.children('.sv-sort-count-asc'), 'count', 'ascending');
+        sort_categories(category_sort_buttons.children('.sv-sort-count-desc'), 'count', 'descending');
 
-        sort_games(game_sort_buttons.children('.sv-sort-alpha-asc'), games, 'name', 'ascending');
-        sort_games(game_sort_buttons.children('.sv-sort-alpha-desc'), games, 'name', 'descending');
+        sort_games(game_sort_buttons.children('.sv-sort-alpha-asc'), 'name', 'ascending');
+        sort_games(game_sort_buttons.children('.sv-sort-alpha-desc'), 'name', 'descending');
     })
 
 }(jQuery));
