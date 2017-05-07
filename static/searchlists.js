@@ -28,8 +28,8 @@
 
     // Custom CSS expression for matching category titles exactly
     jQuery.expr[':'].Matches = function(a, i, m) {
-        return a.innerText.slice(a.innerText.indexOf(' ') + 1).localeCompare(m) === 0;
-    }
+        return a.innerText.slice(a.innerText.indexOf(' ') + 1).localeCompare(m[3]) === 0;
+    };
 
     function search_categories(list, input) {
         // Add search functionality to the category search input field
