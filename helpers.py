@@ -112,7 +112,7 @@ def get_game_info(appid):
     row = cursor.fetchone()
 
     # If it's there and the data is <7 days old, return that information
-    if row is not None and row[8] + datetime.timedelta(7) > datetime.datetime.now():
+    if row is not None and row[9] + datetime.timedelta(7) > datetime.datetime.now():
 
         # Close cursor
         cursor.close()
@@ -138,29 +138,33 @@ def get_game_info(appid):
         categories = ["(Missing)"]
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
         description = "This game seems to have vanished from the Steam Store."
+        release_date= "(Unknown)"
 
     # If the page is hidden behind an age check gate (enter birthday type) return description but dummy data for others
     elif "agecheck" in soup.body["class"]:
         categories = ["(Age Check)"]
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
         description = get_description(soup)
+        release_date= "(Unknown)"
 
     # If the page is behind the other type of age gate (continue/cancel) return description, categories & dummy ratings
     elif soup.find(id="app_agegate") is not None:
         categories = get_categories(soup)
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
         description = get_description(soup)
+        release_date= "(Unknown)"
 
     # If it actually is the page we were looking for, scrape the information from it
     else:
         categories = get_categories(soup)
         ratings = get_ratings(soup)
         description = get_description(soup)
+        release_date = get_release_date(soup)
 
     # Insert the game's information into the database
     cursor.execute(("INSERT INTO games VALUES (%(appid)s, %(appname)s, %(description)s, %(categories)s, "
                     "%(ratings_recent_summary)s, %(ratings_recent_details)s, %(ratings_overall_summary)s, "
-                    "%(ratings_overall_details)s, %(updated)s)"),
+                    "%(ratings_overall_details)s, %(release_date)s, %(updated)s)"),
                    {
                        "appid": appid,
                        "appname": soup.title.contents[0].replace(" on Steam", ""),   # Get game name from page title
@@ -170,6 +174,7 @@ def get_game_info(appid):
                        "ratings_recent_details": ratings[0]["details"],
                        "ratings_overall_summary": ratings[1]["summary"],
                        "ratings_overall_details": ratings[1]["details"],
+                       "release_date": release_date,
                        "updated": datetime.datetime.now()
                    })
 
@@ -181,7 +186,8 @@ def get_game_info(appid):
     return jsonify({
         "categories": categories,
         "ratings": ratings,
-        "description": description
+        "description": description,
+        "release_date": release_date
     })
 
 
@@ -275,3 +281,15 @@ def get_description(soup):
 
     # Return its contents
     return div[0].attrs["content"]
+
+
+def get_release_date(soup):
+    """Scrapes the release date from a Steam Store game page."""
+
+    # Get the appropriate div and check that it exists
+    div = soup.find(class_="release_date").find("span", class_="date")
+    if div is None:
+        raise RuntimeError("The Steam Store layout changed! Missing \"release_date\", (page title: {})"
+                           .format(soup.title.contents[0]))
+
+    return div.string
