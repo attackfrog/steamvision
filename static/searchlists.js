@@ -26,6 +26,11 @@
         return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
 
+    // Custom CSS expression for matching category titles exactly
+    jQuery.expr[':'].Matches = function(a, i, m) {
+        return a.innerText.slice(a.innerText.indexOf(' ') + 1).localeCompare(m) === 0;
+    }
+
     function search_categories(list, input) {
         // Add search functionality to the category search input field
         $(input)
@@ -54,13 +59,14 @@
         if (window.active_categories.length === 0) {
             $(list).children().show()
         }
-
-        // Otherwise, hide all categories
-        $(list).children().hide();
-        // Then iterate through filtered categories list and show categories in it
-        for (var i = 0; i < window.filtered_categories.length; i++) {
-            // Identify the category by its text
-            $(list).children('a:contains(' + window.filtered_categories[i] + ')').show();
+        else {
+            // Otherwise, hide all categories
+            $(list).children().hide();
+            // Then iterate through filtered categories list and show categories in it
+            for (var i = 0; i < window.filtered_categories.length; i++) {
+                // Identify the category by its text
+                $(list).children('a:Matches(' + window.filtered_categories[i] + ')').show();
+            }
         }
     }
     

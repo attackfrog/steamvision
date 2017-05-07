@@ -6,6 +6,11 @@
 
 (function ($) {
 
+    // Custom CSS expression for matching category titles exactly
+    jQuery.expr[':'].Matches = function(a, i, m) {
+        return a.innerText.slice(a.innerText.indexOf(' ') + 1).localeCompare(m) === 0;
+    }
+
     function activate_links(links) {
         links.each(function () {
             $(this).click(function () {
@@ -70,7 +75,7 @@
                     category_links.children().hide();
                     for (var i = 0; i < window.filtered_categories.length; i++) {
                         // Identify them by searching for the category's text
-                        category_links.find('a:contains(' + window.filtered_categories[i] + ')').show()
+                        category_links.find('a:Matches(' + window.filtered_categories[i] + ')').show()
                     }
                 }
             })
