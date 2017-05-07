@@ -83,6 +83,6 @@
         activate_links($('#categories').children());
 
         // Make the function globally accessible so the sorting function can reactivate the category links
-        window.activate_links = activate_links();
+        window.activate_links = activate_links;
     })
 }(jQuery));
