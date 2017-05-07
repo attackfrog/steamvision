@@ -289,7 +289,7 @@ def get_release_date(soup):
     # Get the appropriate div and check that it exists
     div = soup.find(class_="release_date").find("span", class_="date")
     if div is None:
-        raise RuntimeError("The Steam Store layout changed! Missing \"release_date\", (page title: {})"
-                           .format(soup.title.contents[0]))
+        # If there's no release date, just return (Unknown)
+        return "(Unknown)"
 
     return div.string
