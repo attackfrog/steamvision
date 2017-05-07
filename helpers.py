@@ -121,7 +121,8 @@ def get_game_info(appid):
         return jsonify({
             "categories": row[3],
             "ratings": [{"summary": row[4], "details": row[5]}, {"summary": row[6], "details": row[7]}],
-            "description": row[2]
+            "description": row[2],
+            "release_date": row[8]
         })
 
     # Attempt to get html document for requested game's page
