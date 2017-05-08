@@ -1,8 +1,18 @@
 {% extends "base.html" %}
 
 
+{% block css %}
+<style>
+    .jumbotron {
+        background-image: url('/static/img/mosaic.jpg');
+        background-attachment: fixed;
+        background-repeat: no-repeat
+    }
+</style>
+{% endblock %}
+
 {% block main %}
-    <div class="jumbotron" style="background-image: url('/static/img/books.jpg'); background-attachment: fixed; background-repeat: no-repeat">
+    <div class="jumbotron">
         <div class="container">
             <h1>Too many games?</h1>
             <p>Is your game library getting out of control? SteamVision can help.</p>

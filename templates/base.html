@@ -26,12 +26,7 @@
           crossorigin="anonymous">
 
     <!-- Custom CSS -->
-    <style>
-        .footer
-        {
-            text-align: center;
-        }
-    </style>
+    {% block css %}{% endblock %}
 
     <!-- http://stewartjpark.com/Flask-JSGlue/ -->
     {{ JSGlue.include() }}
@@ -67,12 +62,6 @@
     <div id="main" role="main">
         {% block main %}{% endblock %}
     </div>
-
-    <!-- footer class="footer">
-        <div class="container">
-            <p class="text-muted">Jack McLellan 2017</p>
-        </div>
-    </footer> -->
 
     <!-- Scripts: -->
 
