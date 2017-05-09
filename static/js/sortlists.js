@@ -178,12 +178,10 @@
         if (direction === 'ascending') {
             return sort_list.sort(function (a, b) {
                 // Get the first game's quick info summary and remove the year to get the rating summary
-                var rating_a = $(a).find('.sv-quickinfo').text();
-                rating_a = rating_a.slice(0, rating_a.indexOf('|') - 1);
+                var rating_a = $(a).find('.overall_rating').text();
 
                 // Do the same for the second game
-                var rating_b = $(b).find('.sv-quickinfo').text();
-                rating_b = rating_b.slice(0, rating_b.indexOf('|') - 1);
+                var rating_b = $(b).find('.overall_rating').text();
 
                 // Sort the list by comparing the release year in the title
                 return convert_rating_to_value(rating_a) - convert_rating_to_value(rating_b)
@@ -192,12 +190,10 @@
         else if (direction === 'descending') {
             return sort_list.sort(function (a, b) {
                 // Get the first game's quick info summary and remove the year to get the rating summary
-                var rating_a = $(a).find('.sv-quickinfo').text();
-                rating_a = rating_a.slice(0, rating_a.indexOf('|') - 1);
+                var rating_a = $(a).find('.overall_rating').text();
 
                 // Do the same for the second game
-                var rating_b = $(b).find('.sv-quickinfo').text();
-                rating_b = rating_b.slice(0, rating_b.indexOf('|') - 1);
+                var rating_b = $(b).find('.overall_rating').text();
 
                 // Sort the list in the same way as ascending but inverted
                 return -(convert_rating_to_value(rating_a) - convert_rating_to_value(rating_b))
@@ -209,40 +205,8 @@
     }
 
     function convert_rating_to_value(rating) {
-        // For use in a sort function, rank Steam review summaries by positivity/negativity
-        switch (rating) {
-            case 'Overwhelmingly Positive':
-                return 4;
-
-            case 'Very Positive':
-                return 3;
-
-            case 'Positive':
-                return 2;
-
-            case 'Mostly Positive':
-                return 1;
-
-            case 'Mixed':
-                return 0;
-
-            case 'Mostly Negative':
-                return -1;
-
-            case 'Negative':
-                return -2;
-
-            // I'm not sure if the next two summaries exist, but might as well handle them in case they do
-            case 'Very Negative':
-                return -3;
-
-            case 'Overwhelmingly Negative':
-                return -4;
-
-            // If provided some other value, rank it below everything else
-            default:
-                return -5;
-        }
+        // Extract a percentage of positive reviews from the overall reviews string
+        return rating.slice(rating.indexOf('(') + 1, rating.indexOf('%'));
     }
 
     // Activate sort buttons on page load

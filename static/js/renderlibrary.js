@@ -134,7 +134,7 @@ $(document).ready(function () {
         }
         // Add overall ratings if they exist
         if (games[i].ratings[1].summary !== '') {
-            game_html +=        '<p><strong>Overall Reviews: </strong>' + games[i].ratings[1].summary + ' (' + games[i].ratings[1].details + ')</p>'
+            game_html +=        '<p class="overall_rating"><strong>Overall Reviews: </strong>' + games[i].ratings[1].summary + ' (' + games[i].ratings[1].details + ')</p>'
         }
 
         // Add release date and continue with HTML formatting
