@@ -3,15 +3,21 @@
 
 {% block css %}
 <style>
-    .jumbotron {
-        background-image: url('/static/img/mosaic.jpg');
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-    }
-    .jumbotron h1 {
-        color: floralwhite;
-        text-shadow: -10px 0 15px black, 10px 0 15px black, 0 -10px 15px black, 0 10px 15px black;
-    }
+.jumbotron {
+    background-image: url('/static/img/mosaic.jpg');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+.jumbotron h1 {
+    color: floralwhite;
+    text-shadow: -10px 0 15px black, 10px 0 15px black, 0 -10px 15px black, 0 10px 15px black;
+}
+.form-inline {
+    text-align: center;
+}
+.form-inline .form-control {
+    width: 300px;
+}
 </style>
 {% endblock %}
 
@@ -28,20 +34,25 @@
         too: gems you purchased on sale or in a bundle and never got around to playing. SteamVision lets you sort
         through them all and find the game that's just what you were looking for.</p>
 
-    <div class="well well-lg">
-        <h2>Enter your Steam ID to get started.</h2>
-        <form action="{{ url_for('load') }}">
-            <div class="form-group">
-                <input name="id" type="text" class="form-control" placeholder="Steam ID">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h3>Enter your Steam ID to get started.</h3>
+            <div class="well well-lg">
+                <form class="form-inline" action="{{ url_for('load') }}">
+                    <div class="form-group">
+                        <input name="id" type="text" class="form-control" placeholder="Steam ID">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+                <p class="lead">Don't know your Steam ID?</p>
+                <p>It's not necessarily the username you use to log in. Go to your Steam Community profile page and paste in
+                    either the entire URL (http://steamcommunity.com/id/[STEAMID]/) or just the ID part. It will either be a
+                    string of numbers or whatever profile URL you've chosen. SteamVision also accepts Steam IDs which look like
+                    "STEAM_0:1:23456789".</p>
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-        <p class="lead">Don't know your Steam ID?</p>
-        <p>It's not necessarily the username you use to log in. Go to your Steam Community profile page and paste in
-            either the entire URL (http://steamcommunity.com/id/[STEAMID]/) or just the ID part. It will either be a
-            string of numbers or whatever profile URL you've chosen. SteamVision also accepts Steam IDs which look like
-            "STEAM_0:1:23456789".</p>
+        </div>
     </div>
+
 
     <!-- Instructions on how to use the different tools: searching, sorting, selecting categories -->
     </div>
