@@ -184,7 +184,7 @@
                 var rating_b = $(b).find('.overall_rating').text();
 
                 // Sort the list by comparing the release year in the title
-                return convert_rating_to_value(rating_a) - convert_rating_to_value(rating_b)
+                return convert_rating_to_value(rating_a, direction) - convert_rating_to_value(rating_b, direction)
             })
         }
         else if (direction === 'descending') {
@@ -196,7 +196,7 @@
                 var rating_b = $(b).find('.overall_rating').text();
 
                 // Sort the list in the same way as ascending but inverted
-                return -(convert_rating_to_value(rating_a) - convert_rating_to_value(rating_b))
+                return -(convert_rating_to_value(rating_a, direction) - convert_rating_to_value(rating_b, direction))
             })
         }
         else {
@@ -204,9 +204,20 @@
         }
     }
 
-    function convert_rating_to_value(rating) {
+    function convert_rating_to_value(rating, direction) {
+        // Check whether string is empty
+        if (rating === "") {
+            // For ascending sort, put games without an overall rating last
+            if (direction === "ascending") {
+                return 101
+            }
+            // Do the same for descending sort
+            else if (direction === "descending") {
+                return 0
+            }
+        }
         // Extract a percentage of positive reviews from the overall reviews string
-        return rating.slice(rating.indexOf('(') + 1, rating.indexOf('%'));
+        return Number(rating.slice(rating.indexOf('(') + 1, rating.indexOf('%')));
     }
 
     // Activate sort buttons on page load
