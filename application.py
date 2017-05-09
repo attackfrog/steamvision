@@ -21,6 +21,7 @@ def index():
 def load():
     """Displays the loading page, which loads the user's games into browser storage."""
 
+    # If no Steam ID was provided just redirect to the home page
     if not request.args.get("id"):
         return redirect(url_for("index"))
 
