@@ -10,11 +10,7 @@
     }
     .jumbotron h1 {
         color: floralwhite;
-        text-shadow: 0 0 10px black;
-    }
-    .jumbotron p {
-        color: floralwhite;
-        text-shadow: 0 0 5px black;
+        text-shadow: -10px 0 15px black, 10px 0 15px black, 0 -10px 15px black, 0 10px 15px black;
     }
 </style>
 {% endblock %}
@@ -23,8 +19,31 @@
     <div class="jumbotron">
         <div class="container">
             <h1>Too many games?</h1>
-            <p>Is your game library getting out of control? SteamVision can help.</p>
         </div>
+    </div>
+
+    <div class="container">
+    <h2>SteamVision can help.</h2>
+    <p>Over the years, your Steam account has filled up with games you played and loved. But maybe it's got some others
+        too: gems you purchased on sale or in a bundle and never got around to playing. SteamVision lets you sort
+        through them all and find the game that's just what you were looking for.</p>
+
+    <div class="well well-lg">
+        <h2>Enter your Steam ID to get started.</h2>
+        <form action="{{ url_for('load') }}">
+            <div class="form-group">
+                <input name="id" type="text" class="form-control" placeholder="Steam ID">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <p class="lead">Don't know your Steam ID?</p>
+        <p>It's not necessarily the username you use to log in. Go to your Steam Community profile page and paste in
+            either the entire URL (http://steamcommunity.com/id/[STEAMID]/) or just the ID part. It will either be a
+            string of numbers or whatever profile URL you've chosen. SteamVision also accepts Steam IDs which look like
+            "STEAM_0:1:23456789".</p>
+    </div>
+
+    <!-- Instructions on how to use the different tools: searching, sorting, selecting categories -->
     </div>
 {% endblock %}
 
