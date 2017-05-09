@@ -3,7 +3,7 @@
 
 {% block css %}
 <style>
-.jumbotron {
+jumbotron {
     background-image: url('/static/img/mosaic.jpg');
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -17,6 +17,9 @@
 }
 .form-inline .form-control {
     width: 300px;
+}
+.instruction {
+    padding-top: 20px;
 }
 </style>
 {% endblock %}
@@ -34,7 +37,6 @@
         <p>Over the years, your Steam account has filled up with games you played and loved. But maybe it's got some others
             too: gems you purchased on sale or in a bundle and never got around to playing. SteamVision lets you sort
             through them all and find the game that's just what you were looking for.</p>
-        <hr>
 
         <!-- "Login" form and Steam ID instructions -->
         <div class="row">
@@ -58,9 +60,10 @@
                 </div>
             </div>
         </div>
+        <hr>
 
         <!-- Usage instructions -->
-        <div class="row">
+        <div class="row instruction">
             <div class="col-md-9">
                 <h2>Filter your games by category</h2>
                 <p class="lead">Feel like playing a platformer? Look at just the games Steam users have tagged as one by selecting that
@@ -71,7 +74,7 @@
                 <img src="/static/img/categories.png" class="img-rounded img-responsive" alt="Category filtering">
             </div>
         </div>
-        <div class="row">
+        <div class="row instruction">
             <div class="col-md-3">
                 <img src="/static/img/sort.png" class="img-rounded img-responsive" alt="Sort buttons">
             </div>
@@ -82,7 +85,7 @@
                     sort your games alphabetically, by the year of their release, and by their overall user rating.</p>
             </div>
         </div>
-        <div class="row">
+        <div class="row instruction">
             <div class="col-md-9">
                 <h2>Quickly search through games and categories</h2>
                 <p class="lead">You probably have a lot of games, and those games will have a lot of categories. Start typing in one
@@ -97,14 +100,14 @@
         <div id="faq">
             <h1>FAQ</h1>
             <div class="well well-lg">
-                <h4>How does it work?</h4>
+                <h3>How does it work?</h3>
                 <p>SteamVision gets all its information from Steam. It uses the Steam API to get a list of your games and
                     scrapes user tags, user ratings, and release dates from the Steam Store to help you sort through them. It
                     doesn't access any information that's not publicly accessible, so if your Steam profile is set to private it
                     won't be able to read it. </p>
 
-                <h4>Why do some of my games not have categories listed? And what are these categories called "(Age
-                    Check)" and "(Missing)"?</h4>
+                <h3>Why do some of my games not have categories listed? And what are these categories called "(Age
+                    Check)" and "(Missing)"?</h3>
                 <p>Some games on the Steam store make you click on a button or confirm your age to view them. This
                     unfortunately means that SteamVision can't scrape categories or a release date from them. In
                     addition, some games on your account may have been removed from the store or just plain not have a
@@ -112,13 +115,13 @@
                 <p>For these games, SteamVision assigns them the categories "(Age Check)" or "(Missing)" and shows you
                     as much information as it has.</p>
 
-                <h4>Why do some of my games have categories that don't seem to fit?</h4>
+                <h3>Why do some of my games have categories that don't seem to fit?</h3>
                 <p>Because SteamVision takes its category information from user-submitted tags on Steam, some categories
                     can show up accidentally. Once users flag the category as inappropriate on Steam and it's removed
                     there it will be removed from SteamVision too (with a bit of a delay, as SteamVision saves a cache
                     of information it recently scraped from Steam.)</p>
 
-                <h4>I have another question.</h4>
+                <h3>I have another question.</h3>
                 <p>Feel free to email me at <a href="mailto:steam.vision.dev@gmail.com">steam.vision.dev@gmail.com</a>
                     with questions and comments!</p>
             </div>
