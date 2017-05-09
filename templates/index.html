@@ -20,6 +20,7 @@
 }
 .instruction {
     padding-top: 20px;
+    padding-bottom: 20px;
 }
 </style>
 {% endblock %}
@@ -107,16 +108,17 @@
                     date.</p>
             </div>
         </div>
+        <hr>
 
         <!-- FAQ section -->
         <div id="faq">
             <h1>FAQ</h1>
             <div class="well well-lg">
                 <h3>How does it work?</h3>
-                <p>SteamVision gets all its information from Steam. It uses the Steam API to get a list of your games and
-                    scrapes user tags, user ratings, and release dates from the Steam Store to help you sort through them. It
-                    doesn't access any information that's not publicly accessible, so if your Steam profile is set to private it
-                    won't be able to read it. </p>
+                <p>SteamVision gets all its information from Steam. It uses the Steam API to get a list of your games
+                    and scrapes user tags, user ratings, and release dates from the Steam Store to help you sort
+                    through them. It doesn't access any information that's not publicly accessible, so if your Steam
+                    profile is set to private it won't be able to read it. </p>
 
                 <h3>Why do some of my games not have categories listed? And what are these categories called "(Age
                     Check)" and "(Missing)"?</h3>
@@ -128,10 +130,10 @@
                     as much information as it has.</p>
 
                 <h3>Why do some of my games have categories that don't seem to fit?</h3>
-                <p>Because SteamVision takes its category information from user-submitted tags on Steam, some categories
-                    can show up accidentally. Once users flag the category as inappropriate on Steam and it's removed
-                    there it will be removed from SteamVision too (with a bit of a delay, as SteamVision saves a cache
-                    of information it recently scraped from Steam.)</p>
+                <p>Because SteamVision takes its category information from user-submitted tags on Steam, some
+                    categories can show up accidentally. Once users flag the category as inappropriate on Steam and
+                    it's removed there it will be removed from SteamVision too (with a bit of a delay, as SteamVision
+                    saves a cache of information it recently scraped from Steam.)</p>
 
                 <h3>I have another question.</h3>
                 <p>Feel free to email me at <a href="mailto:steam.vision.dev@gmail.com">steam.vision.dev@gmail.com</a>
