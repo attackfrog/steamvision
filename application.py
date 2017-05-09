@@ -91,14 +91,14 @@ def error():
 def page_not_found(e):
     """Displays the error page for page not found errors."""
 
-    return render_template("error.html", e), 404
+    return render_template("error.html", message=e), 404
 
 
 @app.errorhandler(500)
 def internal_server_error(e):
     """Displays the error page for page not found errors."""
 
-    return render_template("error.html", e), 500
+    return render_template("error.html", message=e), 500
 
 
 @app.teardown_appcontext
