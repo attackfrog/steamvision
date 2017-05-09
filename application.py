@@ -87,6 +87,20 @@ def error():
         return render_template("error.html", message=request.args.get("e"))
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    """Displays the error page for page not found errors."""
+
+    return render_template("error.html", e), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    """Displays the error page for page not found errors."""
+
+    return render_template("error.html", e), 500
+
+
 @app.teardown_appcontext
 def teardown_db(exception):
     """Closes the database connection (if open) when the app shuts down."""
