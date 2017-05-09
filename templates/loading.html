@@ -32,6 +32,10 @@
             var message = 'That profile is private, so SteamView can\'t scan it.';
             window.location = '{{ url_for("error") }}?e=' + message;
         }
+        function no_games () {
+            var message = 'That profile doesn\'t have any games to scan.';
+            window.location = '{{ url_for("error") }}?e=' + message;
+        }
 
         $(document).ready(function () {
             // Check if user's profile is private
@@ -70,6 +74,11 @@
                         invalid_id()
                     }
                     data = data.responseJSON;
+
+                    // Make sure the profile has games
+                    if (data.game_count == 0) {
+                        no_games()
+                    }
 
                     // Store game count in browser's local storage
                     sessionStorage.game_count = data.game_count;
