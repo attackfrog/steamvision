@@ -8,7 +8,7 @@
 0. RUNNING STEAMVISION
 
 SteamVision is currently hosted at [ http://www.steam.vision/ ]. You can try it out there, or run your own copy as
-described below in section 1.
+described below in section 1. It is also hosted on Github at [ https://github.com/attackfrog/steamvision ].
 
 
 1. SETUP
