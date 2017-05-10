@@ -100,6 +100,7 @@ undo any filtering you may have done.
 Each category in the list on the left can act as a filter for the games list on the right. When you select one category
 all games are hidden except for the ones which have that category attached to them. The number of games this is can be
 seen in the badge to the right of each category link.
+
 Category filters can be combined to show only games which match all of the selected categories. For example, you can
 select "Action", "Comedy", and "Great Soundtrack" to show only games which have all three of those categories. Click an
 active category again to deactivate it, or use the reset button to deactivate all of them.
