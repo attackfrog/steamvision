@@ -1,0 +1,113 @@
+========================================================================================================================
+
+                                              STEAMVISION DOCUMENTATION
+                                                    (May 9, 2017)
+
+========================================================================================================================
+
+0. RUNNING STEAMVISION
+
+SteamVision is currently hosted at [ http://www.steam.vision/ ]. You can try it out there, or run your own copy as
+described below in section 1.
+
+
+1. SETUP
+
+1.1 Configuring Heroku
+
+SteamVision has been written to run on Heroku. To run a copy of it, you'll need to create a new app on Heroku. From
+there, deploy the code either manually with Git or by connecting to GitHub or Dropbox. Next, add a Postgres server by
+going to Resources->Addons and selecting Heroku Postgres. Use the "Hobby Dev -- Free" plan (unless you'd like to pay
+for more rows in the database.) Then go to Settings->Config Variables, click "Reveal Config Vars", and get ready to add
+the Steam API key you'll get in the next step.
+
+
+1.2 Acquiring a Steam API Key
+
+SteamVision uses the Steam API, which requires an API key. To get one, make a Steam account (if you don't already have
+one) and then go to [ http://steamcommunity.com/dev/apikey ]. Enter the URL you'll host SteamVision at (this can be
+found in the Heroku settings under Domains and Certificates). Copy the API key this page gives you and enter it as a
+new config variable for your Heroku app with the name "API_KEY" (without the quotes.)
+
+
+1.3 Configuring Postgres
+
+SteamVision uses a PostgreSQL server as its database. Its database should contain one table called "games", which will
+need to be created. To do so, connect to the database using your preferred method (I used pgAdmin v4) with the login
+information provided on the page for your Heroku Postgres addon. This can be found under Database Credentials->View
+Credentials. Create the table with the following command:
+
+"CREATE TABLE games
+(
+    appid integer NOT NULL,
+    appname text,
+    description text,
+    categories text[],
+    ratings_recent_summary text,
+    ratings_recent_details text,
+    ratings_overall_summary text,
+    ratings_overall_details text,
+    release_date text,
+    updated timestamp without time zone NOT NULL DEFAULT ('now'::text)::timestamp without time zone,
+    CONSTRAINT games_pkey PRIMARY KEY (appid)
+);"
+
+
+1.4 Configuring Papertrail (Optional)
+
+I recommend the Papertrail addon on Heroku as a better way to view the logs of the website. Add this addon in the same
+way you added the Heroku Postgres addon, and view the logs by clicking on the addon's name in your Heroku app's
+Overview page.
+
+
+
+2. USING STEAMVISION
+
+2.1 Main Page and Entering Your Steam ID
+
+Once you've deployed SteamVision to your Heroku app, go to its main page by going to your app's domain URL (or whatever
+custom domain URL you may have configured.) Once there, you can read the short introduction to how SteamVision works
+and how it can be used. When you're ready to try it out, enter your Steam ID into either the text box in the nav bar or
+the one in the center of the page and submit. If you don't know your Steam ID, you can get it from your Steam Community
+profile page, as the main page of SteamVision explains.
+
+If your Steam account is new or you don't have many games on it, feel free to use the Steam ID of a friend who owns a
+lot of Steam games, as SteamVision is most useful when showing large game libraries. If you don't have any game
+collector friends, you can also use my Steam ID, which is attackfrog.
+
+Once you click submit (or hit Enter) SteamVision will display a loading page as it loads information about all the
+games in your account into your browser's session storage, then redirect you to the library display page.
+
+
+2.2 The Library Page
+
+This is the meat of the SteamVision website. Information is displayed in two columns: Categories on the left and Games
+on the right. The functionality of these is described below.
+
+
+2.2.1 Searching and Sorting
+
+Above each list is a search bar, which will filter its respective list as you type into a sublist that
+contains only categories or games which contain your query in their name. Below those are sets of buttons with which
+you can sort the lists of categories and games. Categories can be sorted alphabetically by name or by the number of
+games described by each category (ascending or descending in each case.) Games can be sorted alphabetically by name, by
+by release year, or by overall rating summary (again, ascending or descending.) There is also a reset button which will
+undo any filtering you may have done.
+
+
+2.2.2 Category Filtering
+
+Each category in the list on the left can act as a filter for the games list on the right. When you select one category
+all games are hidden except for the ones which have that category attached to them. The number of games this is can be
+seen in the badge to the right of each category link.
+Category filters can be combined to show only games which match all of the selected categories. For example, you can
+select "Action", "Comedy", and "Great Soundtrack" to show only games which have all three of those categories. Click an
+active category again to deactivate it, or use the reset button to deactivate all of them.
+
+
+2.2.3 Game Details
+
+You can click on the title of any game to view more information about it. A panel will drop down which contains a
+description of the game, the game's logo, a list of the game's categories, the game's ratings, and the game's release
+date. It also has links which will take you to the game's Steam Store page and the game's Steam Community hub, and
+launch the game (if you have the Steam client installed on your computer.)

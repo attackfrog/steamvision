@@ -1,0 +1,204 @@
+========================================================================================================================
+
+                                             STEAMVISION DESIGN DOCUMENT
+                                                    (May 9, 2017)
+
+========================================================================================================================
+
+1. BACKEND
+
+SteamVision is a web app written in Python and running on Flask. It also connects to a PostgreSQL server to store and
+retrieve data quickly.
+
+The Flask webapp runs from two Python files: application.py, which contains the routes to SteamVision's various pages,
+error handling, and a function to close the database connection when the app is shut down; and helpers.py, which
+contains all the functions SteamVision uses to get, parse, and store information.
+
+
+1.1 The index and library Routes
+
+Both of these are simple: all they do is render the HTML of the index and library pages. For the index this is because
+it's a static page, and for the library it's because all of that page's functionality is in the JavaScript code which
+runs when it is loaded.
+
+
+1.2 The load and error Routes
+
+These too are quite simple. They both take a url argument and pass it to the page they render. In the case of the error
+route it passes the error message to display, and in the case of the load route it passes the user ID to load data
+from. The loading itself is done by JavaScript functionality on the rendered page. If an error message is not present,
+the error route will display the error page without any message, and if the user ID is not present the load route will
+redirect to the index route.
+
+
+1.3 The user_games and user_profile Routes
+
+These two don't display a page to the user (unless the user accesses them manually), instead they return JSON data they
+got from the Steam API. But where the Steam API only accepts Steam IDs in one form (the 64-bit Steam ID), these routes
+accept a few different forms of input. They (or rather, the get_user_games() and get_user_profile() functions in
+helpers.py which they call from) use the guess_steam_id() function in helpers.py to convert those inputs to a 64-bit
+Steam ID, and then use that to query the Steam API for the user's games list (which comes with data about the games)
+and the user's profile (which comes with information about the user.)
+
+If this fails, they return an HTTP error code (204 No Content) which the front end watches for to display an error to
+the user. A failure means that the ID the user provided was invalid and the guess_steam_id() function was unable to
+convert it to valid one.
+
+
+1.4 The game Route
+
+Instead of getting data from the Steam API, this route gets it by scraping the Steam Store (or from the database, if
+the info was already scraped in the past week.) It calls the get_game_info() function, which first uses the get_db()
+function to connect to the Postgres database (or just return the current connection object if it's already connected.)
+It then queries the database for the provided appid, an indentifier which is unique for all Steam games. If the game is
+present in the database and its data is less than 7 days old, it returns the data from that query as a JSON object.
+Querying the database is much faster (10x+) than querying the Steam servers.
+
+If the data is not present or is more than a week old, get_game_info() will get it from the Steam Store page for the
+provided game. It uses urllib.request to get the page, and then uses BeautifulSoup to parse the page into an object
+which can be searched through easily. It then checks the page for a few different scenarios. If the page returned by
+the request is the Steam Store homepage (as recognized by its title) this means the game is missing from the store. In
+this case it returns blank and dummy information. If the game's page is hidden behind one of two different kinds of age
+check gates (as recognized by the presence of certain elements on the page) it returns what information it can gather
+and dummy information for the rest.
+
+If it wasn't blocked by one of these complications, it gets the full set of information, which includes the game's
+description, the user tags for the game, the user rating summaries, and the game's release date. Each of these is done
+by its own function: get_description(), get_categories(), get_ratings(), and get_release_date(). These functions each
+look for the appropriate <div> on the game's page and extract the relevant data from it. In the case of get_ratings()
+this is somewhat complicated, as most games have a summary for both recent reviews and overall reviews, but some will
+have only overall and others will have neither.
+
+Once it has all this information, the game_game_info() function stores it in the database with the current date and
+time and then returns it as a JSON object, which is passed on by the game route.
+
+
+1.5 The Error Handlers (internal_server_error and page_not_found)
+
+These functions are called when the server wants to return a 404 Not Found or a 500 Server Error message. They return
+the same template as the error route, passing as their error message the one provided by the server.
+
+
+1.6 teardown_db
+
+This function is called when the server is shut down, and closes the connection to the database, if one exists.
+
+
+
+2. FRONTEND
+
+The front end of SteamVision is written in HTML and JavaScript. It uses Bootstrap for formatting and appearance and
+jQuery for dynamically rendering pages and requesting data from the server. All rendered pages are extensions of
+base.html, which contains standard formatting and JavaScript references. It also contains the nav bar, which is
+displayed on all pages.
+
+
+2.1 index.html
+
+The index page is a simple HTML document, without any JavaScript functionality. Its purpose is to inform users about
+how to properly use the website.
+
+
+2.2 error.html
+
+The error page is another simple document without any JavaScript. It displays an error message provided by a URL
+argument and a button to take the user back to the index.
+
+
+2.3 loading.html
+
+The purpose of the load page is to request all the data about the user and their games from the backend and store it in
+the browser's session storage to be read and parsed by the JavaScript on library.html. It displays a progress bar to
+the user which it updates as it loads the games in the user's library. It has all of its JavaScript in the HTML
+document rather than in a separate .js file so that it can use Flask to insert the user's ID into the JavaScript code.
+In theory this could allow the user to execute arbitrary code on the page, but as that's just within their browser and
+the request is sanitized on the server end it shouldn't cause any problems.
+
+The JavaScript first requests the user's profile from the user_profile route of the server. If the server returns 204
+No Content or a profile which isn't visible, it redirects the page to the error page with an appropriate message.
+Otherwise it stores that information in the browser's session storage as a JSON string.
+
+It then requests the user's game list from the user_games route and checks again for a 204 response. It also checks
+whether the list contains any games, and if it doesn't redirects to an error page saying so. If the list contains at
+least one game, it iterates through it.
+
+For each game in the list it requests the information for that game's appid from the game route. It then adds the
+information returned from that request to the game's object in memory. If the request fails for some reason, it
+prints an error message in the JavaScript console. For each request it also updates the length of the progress bar and
+shows the user which game it just loaded by updating the text above the progress bar. When all the games are loaded (or
+have failed to load) it stores all this information in the browser's session storage, again as a JSON string.
+
+
+2.4 library.html
+
+The library page displays the user's games and categories, but its HTML doesn't contain any of that information when it
+is loaded. Instead, after the page is loaded, various functions use jQuery to translate the information stored in
+session storage into HTML elements and to activate the functionality of the various controls on the page. These
+functions are broken out into a few different JavaScript files.
+
+2.4.1 renderlibrary.js
+
+This file contains one large function which runs when the page has finished loading. It parses the JSON strings stored
+in session storage into JavaScript objects. It then converts some of that information into JavaScript window variables
+which will be accessed by some of the other functions that run on this page. It builds an object which contains a list
+of categories for each game in the user's collection, referenced by appid. It also does the inverse of that, building
+an object which contains a list of games described by each category, referenced by that category's name.
+
+It then sorts the list of games, parsed earlier from the JSON data, as well as the list of categories (the categories
+are actually stored in an object, so it has to convert this to an array, sort it, and then convert it back to an
+array.)
+
+Then, with all that information stored in memory, it begins rendering the page. It inserts the relevant pieces of
+information into HTML strings and then uses jQuery to append those HTML objects to the appropriate parent objects in
+the page. It does this for the user's account information in the nav bar, for each of the categories in the category
+list, and for each of the games in the games list, including all the relevant information for each of those elements.
+
+2.4.2 filters.js
+
+This file contains functions which activate all the categories (as well as the reset button), giving them their
+filtering functionality. This is done using a jQuery selector to apply the function to all of the children of the
+parent div of the category list. The function activates on click. When a category is clicked, it toggles the category
+from inactive to active (or active to inactive if the category was previously active.) It also adds the category's
+name to a global list, which will be accessed by other functions.
+
+It then looks at what categories are in the list. If none are, it shows all games and categories on the page.
+Otherwise, it iterates through the categories in that list, populating another global variable with the games which are
+common to all the categories in the category list. It hides all the games, then shows only the ones in that list.
+
+While it is iterating through the list of games and showing the ones in it, the function also constructs a list of
+categories which are held by at least one game currently displayed. Once all the games are iterated through, the
+function hides all categories then iterates through this list of categories, showing only ones on it. It uses a custom
+jQuery selector to do so, one which forces the name of the category to match exactly (so that "Action RPG" isn't shown
+by accident when only "RPG" should have been show, for example.)
+
+The reset button function also activates on click. It clears the active category list, deactivates all categories, and
+shows all games and categories.
+
+2.4.3 searchlists.js
+
+This file contains a few functions which attach their functionality to the two search bars after the page is loaded.
+The functions respond to the "change" and "keyup" events for those text fields, so they run every time the user types
+a character. When that happens, they use the two filter functions in this file: show_filtered_categories() and
+show_filtered_games() to show only categories or games which match the user's query. Those functions use the global
+variables populated in filters.js with the currently displayed games and categories to show only the categories and
+games currently in those lists. After that, the search functions hide all categories or games which don't match the
+text in the corresponding text field. If there's no text in the field, all games or categories in the appropriate list
+are shown.
+
+2.4.4 sortlists.js
+
+Where filters.js and searchlists.js contain functions which show and hide games and categories, sortlists.js contains
+functions which rearrange them. These functions are applied to the various buttons included for that purpose in
+library.html. Each of them uses jQuery to select the appropriate collection of elements and then convert them into a
+JavaScript array. They then use a custom sort function for each type of sorting to sort the elements. Finally, they
+delete the original elements and insert the newly sorted set in their place.
+
+The "by name" sorting functions use localeCompare to compare each name string, ranking them in forward or reverse
+alphabetical order as specified. The "by count" sorting function for categories compares the values in the badges of
+the category links, ranking them in forward or reverse numerical order. Similarly, the "by year" game sort compares the
+release year as located in the title of each game info panel, ranking them in numerical order. The "by rating" sort
+function compares the overall percentages of positive reviews as contained in the game's info panel, ranking them in
+numerical order.
+
+For games for which SteamVision doesn't have a release year or overall ratings, the sort functions always put those
+at the end of the list.
