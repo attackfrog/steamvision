@@ -25,10 +25,13 @@ $(document).ready(function () {
         window.games_for_category[category] = [];
         // For each game,
         for (var game in window.categories_for_game) {
-            // If the category is in that game's list,
-            if (window.categories_for_game[game].indexOf(category) !== -1) {
-                // Add it to this category's array
-                window.games_for_category[category].push(game);
+            // If the game's categories were loaded properly, and
+            if (typeof window.categories_for_game[game] !== 'undefined') {
+                // If the category is in that game's list,
+                if (window.categories_for_game[game].indexOf(category) !== -1) {
+                    // Add it to this category's array
+                    window.games_for_category[category].push(game);
+                }
             }
         }
     }

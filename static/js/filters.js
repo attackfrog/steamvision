@@ -62,11 +62,14 @@
                         // Identify the game by its id value
                         $('#' + window.filtered_games[i]).show();
 
-                        // Iterate through each of the categories held by this game and add them to the list
-                        for (var j = 0; j < window.categories_for_game[window.filtered_games[i]].length; j++) {
-                            // But don't add duplicates of categories already in the list
-                            if (window.filtered_categories.indexOf(window.categories_for_game[window.filtered_games[i]][j]) === -1) {
-                                window.filtered_categories.push(window.categories_for_game[window.filtered_games[i]][j])
+                        // If this game's categories loaded properly,
+                        if (typeof window.categories_for_game[window.filtered_games[i]] !== 'undefined') {
+                            // Iterate through each of the categories held by this game and add them to the list
+                            for (var j = 0; j < window.categories_for_game[window.filtered_games[i]].length; j++) {
+                                // But don't add duplicates of categories already in the list
+                                if (window.filtered_categories.indexOf(window.categories_for_game[window.filtered_games[i]][j]) === -1) {
+                                    window.filtered_categories.push(window.categories_for_game[window.filtered_games[i]][j])
+                                }
                             }
                         }
                     }
