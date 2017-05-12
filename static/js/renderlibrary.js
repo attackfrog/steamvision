@@ -15,8 +15,14 @@ $(document).ready(function () {
     // Store categories for each game in a window variable
     window.categories_for_game = {};
     for (var i = 0; i < games.length; i++) {
-        // Add this game's categories as an object property in the form of an array
-        window.categories_for_game[games[i].appid] = games[i].categories
+        // If the game loaded properly, with categories,
+        if (games[i].hasOwnProperty(categories)) {
+            // Add this game's categories as an object property in the form of an array
+            window.categories_for_game[games[i].appid] = games[i].categories
+        } else {
+            // Otherwise, use an empty array
+            window.categories_for_game[games[i].appid] = []
+        }
     }
     // Store games described by each category in a window variable
     window.games_for_category = {};
@@ -25,13 +31,10 @@ $(document).ready(function () {
         window.games_for_category[category] = [];
         // For each game,
         for (var game in window.categories_for_game) {
-            // If the game's categories were loaded properly, and
-            if (typeof window.categories_for_game[game] !== 'undefined') {
-                // If the category is in that game's list,
-                if (window.categories_for_game[game].indexOf(category) !== -1) {
-                    // Add it to this category's array
-                    window.games_for_category[category].push(game);
-                }
+            // If the category is in that game's list,
+            if (window.categories_for_game[game].indexOf(category) !== -1) {
+                // Add it to this category's array
+                window.games_for_category[category].push(game);
             }
         }
     }
@@ -101,11 +104,11 @@ $(document).ready(function () {
                         '</a>' +
                         '<div class="pull-right sv-quickinfo">';
         // If overall review summary exists, add that info to the title
-        if (games[i].ratings[1].summary !== '') {
+        if (games[i].hasOwnProperty(ratings) && games[i].ratings[1].summary !== '') {
             game_html += games[i].ratings[1].summary + ' | '
         }
         // If release date is not unknown, add the year to the title (this assumes the date format ends with a 4-digit year)
-        if (games[i].release_date !== '(Unknown)') {
+        if (games[i].hasOwnProperty(release_date) && games[i].release_date !== '(Unknown)') {
             game_html += games[i].release_date.slice(-4)
         }
         // Continue with html formatting
@@ -122,9 +125,12 @@ $(document).ready(function () {
                                      'src="http://media.steampowered.com/steamcommunity/public/images/apps/' + games[i].appid + '/' + games[i].img_logo_url + '.jpg" />' +
                                 '<br>';
 
-        // Loop through and add game's categories
-        for (var j = 0, num_cats = games[i].categories.length; j < num_cats; j++) {
-            game_html +=        '<span class="label label-info">' + games[i].categories[j] + '</span> '
+        // If the game's categories loaded properly,
+        if (games[i].hasOwnProperty(categories)) {
+            // Loop through and add game's categories
+            for (var j = 0, num_cats = games[i].categories.length; j < num_cats; j++) {
+                game_html +=    '<span class="label label-info">' + games[i].categories[j] + '</span> '
+            }
         }
         // Continue with html formatting
             game_html +=        '</div>' +
@@ -132,17 +138,21 @@ $(document).ready(function () {
                                 '<p>' + games[i].description + '</p>';
 
         // Add recent ratings if they exist
-        if (games[i].ratings[0].summary !== '') {
+        if (games[i].hasOwnProperty(ratings) && games[i].ratings[0].summary !== '') {
             game_html +=        '<p><strong>Recent Reviews: </strong>' + games[i].ratings[0].summary + ' (' + games[i].ratings[0].details + ')</p>'
         }
         // Add overall ratings if they exist
-        if (games[i].ratings[1].summary !== '') {
+        if (games[i].hasOwnProperty(ratings) && games[i].ratings[1].summary !== '') {
             game_html +=        '<p class="overall_rating"><strong>Overall Reviews: </strong>' + games[i].ratings[1].summary + ' (' + games[i].ratings[1].details + ')</p>'
         }
 
-        // Add release date and continue with HTML formatting
-            game_html +=        '<p><strong>Release Date: </strong>' + games[i].release_date + '</p>' +
-                            '</div>' +
+        // Add release date if it exists
+        if (games[i].hasOwnProperty(release_date)) {
+            game_html +=        '<p><strong>Release Date: </strong>' + games[i].release_date + '</p>'
+        }
+
+        // and continue with HTML formatting
+            game_html +=    '</div>' +
                         '</div>' +
                         '<div class="row">' +
                             '<div class="col-md-12" style="text-align: right">' +
