@@ -16,7 +16,7 @@ $(document).ready(function () {
     window.categories_for_game = {};
     for (var i = 0; i < games.length; i++) {
         // If the game loaded properly, with categories,
-        if (games[i].hasOwnProperty(categories)) {
+        if (typeof games[i].categories !== 'undefined') {
             // Add this game's categories as an object property in the form of an array
             window.categories_for_game[games[i].appid] = games[i].categories
         } else {
@@ -104,11 +104,11 @@ $(document).ready(function () {
                         '</a>' +
                         '<div class="pull-right sv-quickinfo">';
         // If overall review summary exists, add that info to the title
-        if (games[i].hasOwnProperty(ratings) && games[i].ratings[1].summary !== '') {
+        if (typeof games[i].ratings !== 'undefined' && games[i].ratings[1].summary !== '') {
             game_html += games[i].ratings[1].summary + ' | '
         }
         // If release date is not unknown, add the year to the title (this assumes the date format ends with a 4-digit year)
-        if (games[i].hasOwnProperty(release_date) && games[i].release_date !== '(Unknown)') {
+        if (typeof games[i].release_date !== 'undefined' && games[i].release_date !== '(Unknown)') {
             game_html += games[i].release_date.slice(-4)
         }
         // Continue with html formatting
@@ -126,7 +126,7 @@ $(document).ready(function () {
                                 '<br>';
 
         // If the game's categories loaded properly,
-        if (games[i].hasOwnProperty(categories)) {
+        if (typeof games[i].categories !== 'undefined') {
             // Loop through and add game's categories
             for (var j = 0, num_cats = games[i].categories.length; j < num_cats; j++) {
                 game_html +=    '<span class="label label-info">' + games[i].categories[j] + '</span> '
@@ -138,16 +138,16 @@ $(document).ready(function () {
                                 '<p>' + games[i].description + '</p>';
 
         // Add recent ratings if they exist
-        if (games[i].hasOwnProperty(ratings) && games[i].ratings[0].summary !== '') {
+        if (typeof games[i].ratings !== 'undefined' && games[i].ratings[0].summary !== '') {
             game_html +=        '<p><strong>Recent Reviews: </strong>' + games[i].ratings[0].summary + ' (' + games[i].ratings[0].details + ')</p>'
         }
         // Add overall ratings if they exist
-        if (games[i].hasOwnProperty(ratings) && games[i].ratings[1].summary !== '') {
+        if (typeof games[i].ratings !== 'undefined' && games[i].ratings[1].summary !== '') {
             game_html +=        '<p class="overall_rating"><strong>Overall Reviews: </strong>' + games[i].ratings[1].summary + ' (' + games[i].ratings[1].details + ')</p>'
         }
 
         // Add release date if it exists
-        if (games[i].hasOwnProperty(release_date)) {
+        if (typeof games[i].release_date !== 'undefined') {
             game_html +=        '<p><strong>Release Date: </strong>' + games[i].release_date + '</p>'
         }
 
