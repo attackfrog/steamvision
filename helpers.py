@@ -124,6 +124,9 @@ def get_game_info(appid):
             "description": row[2],
             "release_date": row[8]
         })
+    # If the data is >7 days old, delete it from the table
+    elif row is not None:
+        cursor.execute("DELETE FROM games WHERE appid = %(appid)s", {"appid": appid})
 
     # Attempt to get html document for requested game's page
     try:
@@ -153,7 +156,7 @@ def get_game_info(appid):
         categories = get_categories(soup)
         ratings = [{"summary": "", "details": ""}, {"summary": "", "details": ""}]
         description = get_description(soup)
-        release_date= "(Unknown)"
+        release_date = "(Unknown)"
 
     # If it actually is the page we were looking for, scrape the information from it
     else:
