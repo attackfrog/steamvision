@@ -112,21 +112,21 @@ def get_game_info(appid):
     row = cursor.fetchone()
 
     # If it's there and the data is <7 days old, return that information
-    if row is not None and row[9] + datetime.timedelta(7) > datetime.datetime.now():
+    if row is not None:
+        if row[9] + datetime.timedelta(7) > datetime.datetime.now():
+            # Close cursor
+            cursor.close()
 
-        # Close cursor
-        cursor.close()
-
-        # Return info from database
-        return jsonify({
-            "categories": row[3],
-            "ratings": [{"summary": row[4], "details": row[5]}, {"summary": row[6], "details": row[7]}],
-            "description": row[2],
-            "release_date": row[8]
-        })
-    # If the data is >7 days old, delete it from the table
-    elif row is not None:
-        cursor.execute("DELETE FROM games WHERE appid = %(appid)s", {"appid": appid})
+            # Return info from database
+            return jsonify({
+                "categories": row[3],
+                "ratings": [{"summary": row[4], "details": row[5]}, {"summary": row[6], "details": row[7]}],
+                "description": row[2],
+                "release_date": row[8]
+            })
+        # If the data is >7 days old, delete it from the table
+        else:
+            cursor.execute("DELETE FROM games WHERE appid=%(appid)s", {"appid": appid})
 
     # Attempt to get html document for requested game's page
     try:
