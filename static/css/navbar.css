@@ -12,7 +12,7 @@
 
 /* Left-hand side nav bar content */
 
-.navtitle {
+.navtitle a {
   color: white;
   font-family: 'Bree Serif', serif;
   font-size: 26px;
@@ -86,7 +86,6 @@
   border: 2px solid #176893;
   border-radius: 3px;
   font-family: 'Roboto', sans-serif;
-  color: white;
   font-size: 15px;
 }
 
@@ -98,6 +97,7 @@
 
 .navform button {
   height: 36px;
+  color: white;
   background-color: #5f8cbf;
   padding: 6px;
   cursor: pointer;
