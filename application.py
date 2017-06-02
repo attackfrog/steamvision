@@ -102,7 +102,7 @@ def library_beta():
     return render_template("library_new.html")
 
 
-@app.route("beta/load")
+@app.route("/beta/load")
 def load_beta():
     """Beta version of the loading page"""
 
