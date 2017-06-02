@@ -30,6 +30,12 @@ h1 {
   text-shadow: -20px 0 20px black, 20px 0 20px black, 0 -20px 20px black, 0 20px 20px black, -10px 0 10px black, 10px 0 10px black, 0 -10px 10px black, 0 10px 10px black;
 }
 
+h3 {
+  color: white;
+  padding-left: 0.5em;
+  text-shadow: 0 0 6px black;
+}
+
 
 /* Welcome intro text and "login" box */
 
@@ -48,12 +54,6 @@ h1 {
   width: 70%;
   margin: auto;
   padding: 50px;
-}
-
-.login-container h3 {
-  color: white;
-  padding-left: 0.5em;
-  text-shadow: 0 0 6px black;
 }
 
 .login-box {

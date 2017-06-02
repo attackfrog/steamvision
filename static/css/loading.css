@@ -30,11 +30,12 @@ p {
   height: 2em;
   margin: 1em auto;
   border-radius: .5em;
+  border: 2px solid #8da4bf;
 }
 
 .progress {
   background-color: #ffbf00;
-  border-radius: .5em;
+  border-radius: .35em;
   height: 100%;
-  width: 0;
+  width: 0%;
 }
