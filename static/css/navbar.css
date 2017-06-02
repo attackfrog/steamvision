@@ -15,7 +15,8 @@
 .navtitle {
   color: white;
   font-family: 'Bree Serif', serif;
-  font-size: 24px;
+  font-size: 26px;
+  text-decoration: none;
   margin-right: 30px;
 }
 
