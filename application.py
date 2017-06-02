@@ -88,6 +88,27 @@ def error():
         return render_template("error.html", message=request.args.get("e"))
 
 
+@app.route("/beta")
+def index_beta():
+    """Beta version of the index"""
+
+    return render_template("index_new.html")
+
+
+@app.route("/beta/library")
+def library_beta():
+    """Beta version of the library"""
+
+    return render_template("library_new.html")
+
+
+@app.route("beta/load")
+def load_beta():
+    """Beta version of the loading page"""
+
+    return render_template("loading_new.html")
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     """Displays the error page for page not found errors."""
@@ -109,24 +130,3 @@ def teardown_db(exception):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close()
-
-
-@app.route("/beta")
-def index_beta():
-    """Beta version of the index"""
-
-    return render_template("index_new.html")
-
-
-@app.route("/beta/library")
-def library_beta():
-    """Beta version of the library"""
-
-    return render_template("library_new.html")
-
-
-@app.route("beta/load")
-def load_beta():
-    """Beta version of the loading page"""
-
-    return render_template("loading_new.html")
