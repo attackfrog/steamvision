@@ -1,0 +1,110 @@
+{% extends "base_new.html" %}
+
+{% block css %}
+  <link href="/static/css/index.css" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+  <!-- Banner -->
+  <div class="banner">
+    <h1>More games than you can keep track of?</h1>
+  </div>
+
+  <!-- Welcome paragraph -->
+  <div class="container bodycontainer welcomebody">
+    <div class="summary">
+      <h2>SteamVision can help.</h2>
+      <p>Over the years, your Steam account has filled up with games you played and loved. But maybe it's got some others too: gems you purchased on sale or in a bundle and never got around to playing. SteamVision lets you sort through them all and find the game that's just what you were looking for.</p>
+    </div>
+
+    <!-- "Login" box with instructions -->
+    <div class="login-container">
+      <h3>Enter your Steam ID to get started.</h3>
+      <div class="login-box">
+        <div class="login-form">
+          <form action="{{ url_for('load_beta') }}" class="login-form">
+            <input type="text" placeholder="Steam ID">
+            <button type="submit">Load Profile</button>
+          </form>
+        </div>
+        <h4>Don't know your Steam ID?</h4>
+        <p>It's not necessarily the username you use to log in. Go to your Steam Community profile page and copy either the entire URL (http://steamcommunity.com/id/[STEAMID]/) or just the ID part. It will either be a string of numbers or whatever profile URL you've chosen. SteamVision also accepts Steam IDs which look like "STEAM_0:1:23456789".</p>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Library browsing instructions -->
+    <div class="instructions">
+      <div class="instructions-row">
+        <div class="instructions-text">
+          <h2>Filter your games by category</h2>
+          <p>Feel like playing a platformer? Look at just the games Steam users have tagged as one by selecting that category. You can also combine category filters: select Platformer and Local Multiplayer to see your games which fit both of those categories, for example.</p>
+        </div>
+        <img src="http://www.steam.vision/static/img/categories.png" alt="Category filters" />
+      </div>
+      <div class="instructions-row">
+        <img src="http://www.steam.vision/static/img/sort.png" alt="Sort menu" />
+        <div class="instructions-text">
+          <h2>Sort games and categories</h2>
+          <p>Want to see which categories are most popular with your games? Or which of your games are the highest rated? You can sort your categories alphabetically and by the number of games they match. You can sort your games alphabetically, by the year of their release, and by their overall user rating.</p>
+        </div>
+      </div>
+      <div class="instructions-row">
+        <div class="instructions-text">
+          <h2>Quickly search through games and categories</h2>
+          <p>You probably have a lot of games, and those games will have a lot of categories. Start typing in one of the search fields to find the one you're looking for.</p>
+        </div>
+        <img src="http://www.steam.vision/static/img/search.png" alt="Search box" />
+      </div>
+      <div class="instructions-row">
+        <img src="http://www.steam.vision/static/img/game.png" alt="Sort menu" />
+        <div class="instructions-text">
+          <h2>Get quick information about your games</h2>
+          <p>Now that you've found a set of games, you'll want to know more about them. Click on the title of any game to see a description of it, along with ratings, categories, and a release date.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- FAQ -->
+    <div id="faq">
+      <h2>F.A.Q.</h2>
+
+      <h3>How does it work?</h3>
+      <p>SteamVision gets all its information from Steam. It uses the Steam API to get a list of your games
+        and scrapes user tags, user ratings, and release dates from the Steam Store to help you sort
+        through them. It doesn't access any information that's not publicly accessible, so if your Steam
+        profile is set to private it won't be able to read it. </p>
+
+      <h3>Why do some of my games not have categories listed? And what are these categories called "(Age
+        Check)" and "(Missing)"?</h3>
+      <p>Some games on the Steam store make you click on a button or confirm your age to view them. This
+        unfortunately means that SteamVision can't scrape categories or a release date from them. In
+        addition, some games on your account may have been removed from the store or just plain not have a
+        page (such as for betas of games.)</p>
+      <p>For these games, SteamVision assigns them the categories "(Age Check)" or "(Missing)" and shows you
+        as much information as it has.</p>
+
+      <h3>Why do some of my games have categories that don't seem to fit?</h3>
+      <p>Because SteamVision takes its category information from user-submitted tags on Steam, some
+        categories can show up accidentally. Once users flag the category as inappropriate on Steam and
+        it's removed there it will be removed from SteamVision too (with a bit of a delay, as SteamVision
+        saves a cache of information it recently scraped from Steam.)</p>
+
+      <h3>When I sort by ratings, why are some games out of order?</h3>
+      <p>SteamVision sorts games by the percentage of reviews they have that are positive. Steam's algorithm
+        may call one game "Very Positive" and another "Overwhelmingly Positive" even if they have the same
+        percentage of positive reviews. This can make some games look out of order.</p>
+
+      <h3>Why am I stuck on "Starting up..."?</h3>
+      <p>It may be because you have JavaScript disabled. SteamVision relies on JavaScript to function, and
+        won't work unless you have it enabled.</p>
+
+      <h3>I have another question.</h3>
+      <p>Feel free to email me at <a href="mailto:steam.vision.dev@gmail.com">steam.vision.dev@gmail.com</a>
+        with questions and comments!</p>
+    </div>
+  </div>
+{% endblock %}

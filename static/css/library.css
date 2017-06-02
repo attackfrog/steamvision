@@ -1,0 +1,257 @@
+/* Styles for SteamVision Library */
+
+/* Page-wide styles */
+
+h1 {
+  color: white;
+  padding: 20px 30px 10px 20px;
+}
+
+.searchfield {
+  height: 38px;
+  box-sizing: border-box;
+  display: block;
+  border: 2px solid #566575;
+  border-radius: 3px;
+  padding: 3px 10px;
+  font-size: 16px;
+}
+
+
+/* Categories panel */
+
+.categorybox {
+  width: 27%;
+  min-width: 300px;
+  margin-right: 20px;
+}
+
+/* Category controls */
+
+.categorybox form {
+  width: 100%;
+}
+
+.categorybox .searchfield {
+  width: 100%;
+  margin: 15px auto;
+}
+
+.category-controls {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reset {
+  display: inline-block;
+  background-color: #e04c4c;
+  color: white;
+  padding: 8px 15px;
+  border: 2px solid white;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sort-dropdown {
+  background-color: white;
+  padding: 7px 17px;
+  border: 2px solid #566575;
+  border-radius: 3px;
+}
+
+.sort-dropdown-content {
+  display: none;
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 200px;
+  list-style-type: none;
+  text-align: right;
+  font-family: 'Roboto', sans-serif;
+  background-color: white;
+  padding: 7px 15px;
+  border: 2px solid #566575;
+  border-radius: 3px;
+}
+
+.sort-dropdown-content li {
+  padding: 6px 0;
+}
+
+.sort-button {
+  background-color: #0f4460;
+  color: white;
+  margin: 0 0 0 7px;
+  padding: 1px 5px;
+  border-bottom: 2px solid #ffbf00;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Category list */
+
+.categories {
+  list-style-type: none;
+  display: block;
+  margin: 15px auto;
+  background-color: #eee;
+  border-radius: 3px;
+}
+
+.categories li {
+  padding: 10px 16px;
+  border-radius: 3px;
+  border-bottom: 1px solid #ccc;
+}
+
+.categories li:hover {
+  background-color: #92c3dd;
+}
+
+.count-badge {
+  float: right;
+  background-color: #4b89aa;
+  color: white;
+}
+
+
+/* Games list */
+
+#game-search {
+  width: 50%;
+  min-width: 300px;
+}
+
+.gamebox .searchfield {
+  width: 100%;
+}
+
+.game-controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.games-accordion {
+  padding: 15px;
+}
+
+.game {
+  margin-bottom: 3px;
+}
+
+/* Accordion items (title) */
+
+.titletoggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  background-color: #5e6d7f;
+  border-radius: 2px;
+  border-bottom: 2px solid #e5bd44;
+}
+
+.game-title {
+  display: flex;
+  font-size: 18px;
+  color: white;
+}
+
+.game-title img {
+  border: 2px solid #b7c4cc;
+  border-radius: 6px;
+  height: 1.2em;
+  margin-right: 10px;
+}
+
+.game-quickinfo {
+  color: #b7c1cc;
+}
+
+
+/* Accordion items (content) */
+
+.game-content {
+  background-color: white;
+  margin: 0 3px;
+  padding: 20px;
+}
+
+.game-summary {
+  display: flex;
+  justify-content: space-around;
+}
+
+.game-summary img {
+  display: inline-block;
+  float: left;
+  margin: 5px 20px 10px 5px;
+  border-radius: 3px;
+}
+
+.game-content p {
+  padding-top: 8px;
+}
+
+.game-content h3 {
+  padding: 15px 0 5px 5px;
+}
+
+.category-badge {
+  background-color: #ff8a4c;
+  padding: 5px 10px;
+  margin: 3px;
+}
+
+.game-content table {
+  border-collapse: collapse;
+  width: 95%;
+  margin: 10px auto;
+}
+
+.game-content th {
+  text-align: right;
+  font-size: 15px;
+  padding: 8px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  vertical-align: bottom;
+}
+
+.game-content td {
+  font-size: 0.9em;
+  padding: 8px 0 8px 5px;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  vertical-align: bottom;
+}
+
+.game-content-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 20px;
+  margin-top: 15px;
+  border-top: 1px solid #ccc;
+}
+
+.game-link {
+  background-color: #0f4460;
+  color: white;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  padding: 10px;
+  margin-left: 15px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.game-link:hover {
+  background-color: #176893;
+}

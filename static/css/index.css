@@ -1,0 +1,174 @@
+/* Styles for SteamVision welcome page */
+
+h2 {
+  color: white;
+  margin-bottom: 1em;
+  text-shadow: 0 0 6px black;
+}
+
+.bodycontainer {
+  flex-direction: column;
+}
+
+
+/* Banner with "grabber" text */
+
+.banner {
+  background-image: url('/static/img/mosaic.jpg');
+  width: 100%;
+  margin: 50px 0;
+  padding: 100px 17%;
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
+  box-shadow: 0 0 50px black;
+}
+
+h1 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 3em;
+  color: white;
+  text-shadow: -20px 0 20px black, 20px 0 20px black, 0 -20px 20px black, 0 20px 20px black, -10px 0 10px black, 10px 0 10px black, 0 -10px 10px black, 0 10px 10px black;
+}
+
+
+/* Welcome intro text and "login" box */
+
+.welcomebody {
+  line-height: 2em;
+}
+
+.summary * {
+  color: white;
+  margin: 10px 20px;
+}
+
+/* "Login" box */
+
+.login-container {
+  width: 70%;
+  margin: auto;
+  padding: 50px;
+}
+
+.login-container h3 {
+  color: white;
+  padding-left: 0.5em;
+  text-shadow: 0 0 6px black;
+}
+
+.login-box {
+  background-color: #67788c;
+  margin: 10px 0;
+  padding: 20px;
+  border-radius: 3px;
+  box-shadow: 0 0 8px;
+}
+
+/* "Login" form */
+
+.login-form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.login-form input,
+.login-form button {
+  border: 2px solid #8da4bf;
+  border-radius: 3px;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+  font-size: 15px;
+}
+
+.login-form input {
+  height: 32px;
+  width: 60%;
+  background-color: white;
+  padding-left: 8px;
+}
+
+.login-form button {
+  height: 36px;
+  background-color: #5f8cbf;
+  padding: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+/* Steam ID instructions */
+
+.login-box h4,
+.login-box p {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 5px;
+}
+
+.login-box h4 {
+  margin-top: 20px;
+}
+
+.login-box p {
+  font-size: 0.9em;
+}
+
+
+/* Instructions text and images */
+
+.instructions {
+  padding: 30px 0;
+}
+
+.instructions-row {
+  display: flex;
+  padding: 20px 0;
+}
+
+.instructions-text {
+  margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.instructions-text h2 {
+  color: white;
+  margin-bottom: 1em;
+  text-shadow: 0 0 6px black;
+}
+
+.instructions-text p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1em;
+  line-height: 2em;
+}
+
+.instructions-row img {
+  border-radius: 3px;
+  margin: 0 20px;
+  box-shadow: 0 0 6px;
+}
+
+
+/* FAQ */
+
+#faq {
+  width: 80%;
+  margin: auto;
+  padding: 50px;
+}
+
+#faq h3 {
+  margin: 30px 0 15px 0;
+  padding-left: 0;
+}
+
+#faq p {
+  color: rgba(255, 255, 255, 0.7);
+  padding-left: 20px;
+}
+
+#faq a {
+  color: #94c5e0;
+}

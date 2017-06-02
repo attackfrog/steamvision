@@ -1,0 +1,158 @@
+{% extends "base_new.html" %}
+
+{% block css %}
+  <link href="/static/css/library.css" rel="stylesheet">
+{% endblock %}
+
+{% block main %}
+  <div class="container bodycontainer">
+
+    <!-- Category columnn -->
+    <div class="categorybox">
+      <h1>Categories</h1>
+
+      <!-- Category search box -->
+      <div class="category-controls">
+        <form id="category-search">
+          <input type="text" class="searchfield" placeholder="Search categories">
+        </form>
+      </div>
+
+      <!-- Reset button and sort dropdown -->
+      <div class="category-controls">
+        <button class="reset">Reset</button>
+        <div class="dropdown sort-dropdown">
+          <a>Sort by...</a>
+          <ul class="dropdown-content sort-dropdown-content">
+            <li>Name: <a class="badge sort-button">▲</a> <a class="badge sort-button">▼</a></li>
+            <li>Game Count: <a class="badge sort-button">▲</a> <a class="badge sort-button">▼</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Category list -->
+      <ul class="categories">
+        <li>Action <span class="badge count-badge">12</span></li>
+        <li>Platformer <span class="badge count-badge">49</span></li>
+        <li>Action <span class="badge count-badge">2</span></li>
+        <li>Platformer <span class="badge count-badge">49</span></li>
+        <li>Action <span class="badge count-badge">12</span></li>
+        <li>Platformer <span class="badge count-badge">490</span></li>
+        <li>Action <span class="badge count-badge">12</span></li>
+        <li>Platformer <span class="badge count-badge">49</span></li>
+        <li>Action <span class="badge count-badge">12</span></li>
+        <li>Platformer <span class="badge count-badge">49</span></li>
+      </ul>
+    </div>
+
+    <!-- Games column -->
+    <div class="gamebox">
+      <h1>Games</h1>
+
+      <div class="game-controls">
+        <form id="game-search">
+          <input type="text" class="searchfield" placeholder="Search games">
+        </form>
+
+        <div class="dropdown sort-dropdown">
+          <a>Sort by...</a>
+          <ul class="dropdown-content sort-dropdown-content">
+            <li>Name: <a class="badge sort-button">▲</a> <a class="badge sort-button">▼</a></li>
+            <li>Rating: <a class="badge sort-button">▲</a> <a class="badge sort-button">▼</a></li>
+            <li>Release Date: <a class="badge sort-button">▲</a> <a class="badge sort-button">▼</a></li>
+            <li>Time Played: <a class="badge sort-button">▲</a> <a class="badge sort-button">▼</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="games-accordion">
+        <div class="game" id="game1">
+          <div class="titletoggle">
+            <span class="game-title">
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1270523/profile/profile-80.jpg" />
+              The Hollowing of Sunder Fort
+            </span>
+            <span class="game-quickinfo">
+              Very Positive |
+              2006 |
+              2hr34min
+            </span>
+          </div>
+          <div class="game-content">
+            <div class="game-summary">
+              <img src="http://media.steampowered.com/steamcommunity/public/images/apps/236730/734924799a45af7f397f3116d032975372ac1874.jpg" />
+              <p class="game-description">This is the game which is the best game among several games at least, maybe all of the games but probably just those games, well, you know how it is.</p>
+            </div>
+            <table>
+              <tr>
+                <th>Overall Rating:</th>
+                <td>Very Positive (97% of 543 users rated it positively.)</td>
+              </tr>
+              <tr>
+                <th>Recent Rating:</th>
+                <td>Extremely Positive (110% of 234 users rated it positively in the last 30 days.)</td>
+              </tr>
+              <tr>
+                <th>Release Date:</th>
+                <td>August 34, 2019</td>
+              </tr>
+              <tr>
+                <th>Your Play Time:</th>
+                <td>2 hours 34 minutes</td>
+              </tr>
+            </table>
+            <h3>Categories:</h3>
+            <hr>
+            <p class="game-categories"><span class="badge category-badge">Action-Adventure</span><span class="badge category-badge">Platformer</span><span class="badge category-badge">Strategy</span><span class="badge category-badge">Insane</span><span class="badge category-badge">Wafflecopter</span>
+              <span
+                  class="badge category-badge">Amazing</span><span class="badge category-badge">Hella weird</span><span class="badge category-badge">This game</span><span class="badge category-badge">Abe</span><span class="badge category-badge">Tunamancer</span><span class="badge category-badge">A fish</span>
+              <span
+                  class="badge category-badge">And?</span>
+            </p>
+            <div class="game-content-footer">
+              <a class="game-link" href="#">Steam Store Page</a>
+              <a class="game-link" href="#">Community Page</a>
+              <a class="game-link" href="#">Launch Game with Steam</a>
+            </div>
+          </div>
+        </div>
+        <div class="game" id="game2">
+          <div class="titletoggle">
+          <span class="game-title">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1270523/profile/profile-80.jpg" />
+            Total Anubulation Xtreme Madness</span>
+            <span class="game-quickinfo">
+          Very Mediocre |
+          2017 |
+          80hr34min
+          </span>
+          </div>
+        </div>
+        <div class="game" id="game2">
+          <div class="titletoggle">
+          <span class="game-title">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1270523/profile/profile-80.jpg" />
+            Total Anubulation Xtreme Madness</span>
+            <span class="game-quickinfo">
+          Very Mediocre |
+          2017 |
+          80hr34min
+          </span>
+          </div>
+        </div>
+        <div class="game" id="game2">
+          <div class="titletoggle">
+          <span class="game-title">
+            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1270523/profile/profile-80.jpg" />
+            Total Anubulation Xtreme Madness</span>
+            <span class="game-quickinfo">
+          Very Mediocre |
+          2017 |
+          80hr34min
+          </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

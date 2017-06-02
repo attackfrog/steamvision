@@ -1,0 +1,103 @@
+/* General nav bar layout */
+
+.navbar {
+  background-color: #0f4460;
+  border-bottom: 3px solid #ffbf00;
+  padding: 10px;
+}
+
+.navcontainer * {
+  display: inline-block;
+}
+
+/* Left-hand side nav bar content */
+
+.navtitle {
+  color: white;
+  font-family: 'Bree Serif', serif;
+  font-size: 24px;
+  margin-right: 30px;
+}
+
+.navlinks a {
+  color: #b7c4cc;
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  text-decoration: none;
+  padding-right: 15px;
+}
+
+.navlinks a:hover {
+  color: white;
+}
+
+
+/* User profile image and info dropdown */
+
+.navuser img {
+  height: 32px;
+  float: right;
+  border: 2px solid #b7c4cc;
+  border-radius: 6px;
+  margin-left: 10px;
+}
+
+.nav-dropdown-toggle {
+  padding-top: 6px;
+  color: #b7c4cc;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.nav-dropdown-content {
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  min-width: 230px;
+  text-align: right;
+  font-family: 'Roboto', sans-serif;
+  line-height: 2em;
+  background-color: #0f4460;
+  padding: 5px 10px 5px 0;
+  border-bottom: 3px solid #ffbf00;
+}
+
+.nav-dropdown-content a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav-dropdown-content li {
+  color: #97a8b2;
+}
+
+
+/* Quick profile load form */
+
+.navform {
+  margin-left: 30px;
+}
+
+.navform input,
+.navform button {
+  border: 2px solid #176893;
+  border-radius: 3px;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+  font-size: 15px;
+}
+
+.navform input {
+  height: 32px;
+  background-color: white;
+  padding-left: 8px;
+}
+
+.navform button {
+  height: 36px;
+  background-color: #5f8cbf;
+  padding: 6px;
+  cursor: pointer;
+}
