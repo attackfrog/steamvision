@@ -111,9 +111,9 @@ def get_game_info(appid):
     cursor.execute("SELECT * FROM games WHERE appid=%(appid)s", {"appid": appid})
     row = cursor.fetchone()
 
-    # If it's there and the data is <7 days old, return that information
+    # If it's there and the data is <14 days old, return that information
     if row is not None:
-        if row[9] + datetime.timedelta(7) > datetime.datetime.now():
+        if row[9] + datetime.timedelta(14) > datetime.datetime.now():
             # Close cursor
             cursor.close()
 
@@ -124,7 +124,7 @@ def get_game_info(appid):
                 "description": row[2],
                 "release_date": row[8]
             })
-        # If the data is >7 days old, delete it from the table
+        # If the data is >14 days old, delete it from the table
         else:
             cursor.execute("DELETE FROM games WHERE appid=%(appid)s", {"appid": appid})
 
