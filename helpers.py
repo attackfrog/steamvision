@@ -297,4 +297,4 @@ def get_release_date(soup):
         return "(Unknown)"
 
     # Otherwise, return the date portion of the div (format: Aug. 21, 2012)
-    return div.find("span", class_="date").string
+    return div.find(class_="date").string

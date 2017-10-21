@@ -156,3 +156,26 @@
     </div>
   </div>
 {% endblock %}
+
+{% block scripts %}
+  <script src="https://unpkg.com/vue"></script>
+
+  <script>
+      Vue.component('loading-bar', {
+          template:
+              '<div class="container bodycontainer">' +
+                '<h1>Loading games...</h1>' +
+                '<p>If you have a lot of uncommon games, this can take a while.</p>' +
+                '<div class="loadbox">' +
+                '<p>{{ game.title }} ({{ game.number }}/{{ game.total }})</p>)'
+                '<div class="loadbar">'
+      });
+
+      var vm = new Vue({
+          el: '#app',
+          data: {
+              jack = "cool"
+          }
+      })
+  </script>
+{% endblock %}
